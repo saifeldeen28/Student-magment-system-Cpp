@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(final_project main.cpp
         user.h
-        Course.h)
+        Course.h
+        admin.h
+        instructor.h)
