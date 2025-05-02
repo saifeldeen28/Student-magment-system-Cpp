@@ -7,4 +7,5 @@ add_executable(final_project main.cpp
         user.h
         Course.h
         admin.h
-        instructor.h)
+        instructor.h
+)
