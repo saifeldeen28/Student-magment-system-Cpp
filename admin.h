@@ -17,22 +17,31 @@ public:
     Instructor(int id, string username, string password) : User(id, username, password) {}
 };
 
-class Student : public User {
-public:
-    Student(int id, string username, string password) : User(id, username, password) {}
-};
 class Administrator : public User {
 public:
     Administrator(int id, string username, string password) : User(id, username, password) {}
 
     void add_user(int id, string username, string password, string role, vector<Student>& student_list, vector<Instructor>& instructor_list) {
+        for (int i = 0; i < instructor_list.size(); i++) {
+            if (instructor_list[i].id == id || instructor_list[i].username == username) {
+                cout << "User with same ID or username already exists" << endl;
+                return;
+            }
+        }
+
+        for (int i = 0; i < student_list.size(); i++) {
+            if (student_list[i].id == id || student_list[i].username == username) {
+                cout << "User with same ID or username already exists" << endl;
+                return;
+            }
+        }
         if (role == "instructor") {
             Instructor new_instructor(id, username, password);
             instructor_list.push_back(new_instructor);
             cout << "Instructor added successfully" << endl;
         }
         else if (role == "student") {
-            Student new_student(id, username, password);
+            Student new_student;
             student_list.push_back(new_student);
             cout << "Student added successfully" << endl;
         }
@@ -86,7 +95,6 @@ public:
         cout << "Course not found" << endl;
     }
 };
-
 
 
 #endif //ADMIN_H
