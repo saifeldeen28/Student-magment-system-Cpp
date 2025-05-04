@@ -11,8 +11,10 @@ public:
     vector<Course*> Registered_Courses ;
     vector<int> Grades ;
     int MAX_COURSES = 6 ;
-    Student();
-    Student(string username, string password, int id);
+    int id;
+    string password;
+    string username;
+    Student(string username, string password, int id):User(id,password,username);
     bool set_Courses_Grades(vector<Course*> courses , vector<int> grades ) {
         if (courses.size() > MAX_COURSES) {
             cout<< "You have reached the maximum number of courses" << endl ;
@@ -24,7 +26,9 @@ public:
         }
 
         Registered_Courses = courses ;
-        Grades = grades ;
+        for(Course c : courses){
+            grades.add(c.getGrade(id));
+        }
 
         cout<< "Courses and grades have been assigned successfully" << endl ;
         return true ;
