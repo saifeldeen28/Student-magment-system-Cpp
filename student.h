@@ -1,84 +1,92 @@
-
 #ifndef STUDENT_H
 #define STUDENT_H
 #include <iostream>
-#include <vector>
 #include "Course.h"
 #include "User.h"
-using namespace std ;
+using namespace std;
+
 class Student : public User {
+private:
+    const int MAX_COURSES = 6;
+    Course registered_courses[MAX_COURSES]; // Stored by value
+    int course_count;
+
 public:
-    vector<Course*> Registered_Courses ;
-    vector<int> Grades ;
-    int MAX_COURSES = 6 ;
-    int id;
-    string password;
-    string username;
-    Student(string username, string password, int id,vector<Course> &courses):User(id,password,username){
-        for(Course c:courses){
-            grades.push_back(c.getGrade(id));
-        }
+    Student(int id, string username, string password) : User(id , username , password){
+            course_count = 0 ;
     }
-    bool add(Course* course) {
-        if (Registered_Courses.size() >= MAX_COURSES) {
-            cout<< "You have reached the maximum number of courses" << endl ;
+
+    // Add a course
+    bool add(Course course) {
+
+
+        if (course_count >= MAX_COURSES)
+        {
+            cout<< "You have reached the maximum number of courses" << endl;
             return false;
         }
-        for (int i = 0; i < Registered_Courses.size(); i++) {
-            if (Registered_Courses[i]->code == course->code) {
-                cout<< "Already registered for course ID: " << course->code<< endl ;
+
+        // Check if already registered
+        for (int i = 0 ; i < course_count ; i++)
+        {
+            if (registered_courses[i].name == Course.name)
+            {
+                cout << "Already registered for course " << course.name << endl;
                 return false;
             }
         }
 
-        Registered_Courses.push_back(course);
-        Grades.push_back(0);
-
-        cout<< "Successfully registered for course ID: " << course->code << endl ;
+        // Register student in course
+        Course.student_ids[Course.student_ids.size()] = id ;
+        Course.grades[Course.grades.size()] = 0 ;
+        registered_courses[course_count++] = course ;
+        cout << " Successfully registered for course: " << course.name << endl ;
         return true ;
     }
-    bool drop(int courseID) {
-        for (int i = 0 ; i < Registered_Courses.size() ; i++) {
-            if (Registered_Courses[i]->code == courseID) {
-                Registered_Courses.erase(Registered_Courses.begin() + i);
-                if (i < Grades.size()) {
-                    Grades.erase(Grades.begin() + i);
-                }
-                cout<< "Successfully dropped course ID:"<< courseID << endl  ;
-                return true;
-            }
-        }
 
-        cout<< "Course ID " << courseID << " not found in your registered courses   " << endl ;
-        return false;
-    }
-    void viewGrades() {
-        if (Registered_Courses.empty()) {
-            cout<< "You are not registered in any courses" << endl ;
-            return;
-        }
+    bool drop(course c) {
 
-        cout << "Your Grades:" << endl ;
-        for (int i = 0; i < Registered_Courses.size(); i++) {
-            cout<< "Course: " << Registered_Courses[i]->name << " ID: " << Registered_Courses[i]->code<< "Grade: " << Grades[i] << endl ;
-        }
     }
-    void averageGrade() {
-        if (Grades.empty()) {
-            cout<< "No grades available to calculate average." << endl ;
+
+    void viewGrades() const {
+        if (course_count == 0)
+        {
+            cout << "You are not registered in any courses" << endl ;
             return ;
         }
 
-         sum = 0;
-        for (int i = 0 ; i < Grades.size() ; i++) {
-            sum += Grades[i];
+        cout << "Your Grades :" << endl;
+        for (int i = 0; i < course_count ; i++ )
+        {
+            cout<< "Your Course : "registered_courses[i] << "Your Grade : "<< Course.grades[i] ;
         }
 
-        double average = (double)sum / Grades.size() ;
-        cout << "Average grade: " << average << endl ;
+
+    }
+
+    void averageGrade()
+       {
+
+        if (course_count == 0) {
+            cout<< "No grades available to calculate average" << endl ;
+            return ;
+        }
+
+        double sum = 0;
+
+        for (int i = 0 ; i < course_count ; i++)
+        {
+
+            sum+= registered_courses[i] ;
+            cout << sum / course_count ;
+        }
+
+
+    int get_Number_Of_Courses()
+    {
+        return course_count ;
     }
 
 };
 
 #endif // STUDENT_H
-
