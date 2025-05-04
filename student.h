@@ -14,31 +14,14 @@ public:
     int id;
     string password;
     string username;
-    Student(string username, string password, int id):User(id,password,username);
-    bool set_Courses_Grades(vector<Course*> courses , vector<int> grades ) {
-        if (courses.size() > MAX_COURSES) {
-            cout<< "You have reached the maximum number of courses" << endl ;
-            return false ;
-        }
-        if (courses.size()!= grades.size()) {
-            cout<< "Number of courses and grades must match" << endl ;
-            return false;
-        }
-
-        Registered_Courses = courses ;
-        for(Course c : courses){
-            grades.add(c.getGrade(id));
-        }
-
-        cout<< "Courses and grades have been assigned successfully" << endl ;
-        return true ;
+    Student(string username, string password, int id,vector<Course> &courses, vector<grades> &grades):User(id,password,username,courses , grades){
+        
     }
     bool add(Course* course) {
         if (Registered_Courses.size() >= MAX_COURSES) {
             cout<< "You have reached the maximum number of courses" << endl ;
             return false;
         }
-
         for (int i = 0; i < Registered_Courses.size(); i++) {
             if (Registered_Courses[i]->code == course->code) {
                 cout<< "Already registered for course ID: " << course->code<< endl ;
@@ -84,7 +67,7 @@ public:
             return ;
         }
 
-        int sum = 0;
+         sum = 0;
         for (int i = 0 ; i < Grades.size() ; i++) {
             sum += Grades[i];
         }
