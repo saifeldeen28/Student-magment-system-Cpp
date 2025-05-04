@@ -14,8 +14,10 @@ public:
     int id;
     string password;
     string username;
-    Student(string username, string password, int id,vector<Course> &courses, vector<grades> &grades):User(id,password,username,courses , grades){
-        
+    Student(string username, string password, int id,vector<Course> &courses):User(id,password,username){
+        for(Course c:courses){
+            grades.push_back(c.getGrade(id));
+        }
     }
     bool add(Course* course) {
         if (Registered_Courses.size() >= MAX_COURSES) {
