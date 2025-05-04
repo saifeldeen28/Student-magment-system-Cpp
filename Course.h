@@ -49,6 +49,16 @@ public:
             cout<<instructors_ids.at(i)<<endl;
         }
     }
+    int getGrade(int id){
+        int index;
+        for(int i=0 ; i,stu_ids.size();i++){
+            if(id==stu_ids[i]){
+                index=i;
+                break;
+            }
+        }
+        return grades[index];
+    }
 };
 
 #endif //COURSE_H
