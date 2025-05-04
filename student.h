@@ -38,8 +38,11 @@ public:
 
         // Register student in course
         Course.student_ids[Course.student_ids.size()] = id ;
+        
         Course.grades[Course.grades.size()] = 0 ;
+        
         registered_courses[course_count++] = course ;
+        
         cout << " Successfully registered for course: " << course.name << endl ;
         return true ;
     }
@@ -77,10 +80,9 @@ public:
         for (int i = 0 ; i < course_count ; i++)
         {
 
-            sum+= registered_courses[i] ;
-            cout << sum / course_count ;
+            sum+= Course.grades[i] ;
         }
-
+     cout << sum / course_count ;
 
     int get_Number_Of_Courses()
     {
