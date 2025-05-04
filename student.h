@@ -8,7 +8,7 @@ using namespace std;
 class Student : public User {
 private:
     const int MAX_COURSES = 6;
-    Course registered_courses[MAX_COURSES]; // Stored by value
+    Course registered_courses[MAX_COURSES];
     int course_count;
 
 public:
