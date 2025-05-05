@@ -8,12 +8,12 @@ using namespace std;
 class Student : public User {
 private:
     const int MAX_COURSES = 6;
-    Course registered_courses[MAX_COURSES];
+    Course registered_courses[6]; // Array to hold registered courses
     int course_count;
 
 public:
-    Student(int id, string username, string password) : User(id , username , password){
-            course_count = 0 ;
+    Student(int id, string username, string password) : User(id, username, password) {
+        course_count = 0;
     }
 
     // Add a course
@@ -29,7 +29,7 @@ public:
         // Check if already registered
         for (int i = 0 ; i < course_count ; i++)
         {
-            if (registered_courses[i].name == Course.name)
+            if (registered_courses[i].name == course.name)
             {
                 cout << "Already registered for course " << course.name << endl;
                 return false;
@@ -37,9 +37,9 @@ public:
         }
 
         // Register student in course
-        Course.student_ids[Course.student_ids.size()] = id ;
+        course.student_ids[course.student_ids.size()] = id ;
         
-        Course.grades[Course.grades.size()] = 0 ;
+        course.grades[course.grades.size()] = 0 ;
         
         registered_courses[course_count++] = course ;
         
@@ -47,11 +47,29 @@ public:
         return true ;
     }
 
-    bool drop(course c) {
-
+    bool drop(Course course)
+    
+    
+    {
+        for(int i = 0 ; i < course_count ; i++)
+        {
+            if (registered_courses[i].name == course.name)
+            {
+                // Remove the course from the registered courses
+                for (int j = i; j < course_count - 1; j++)
+                {
+                    registered_courses[j] = registered_courses[j + 1];
+                }
+                course_count--;
+                cout << "Successfully dropped course  " << course.name << endl;
+                return true;
+            }   
+        } 
+        cout << "Course not found in registered courses" << endl;
+        return false;
     }
 
-    void viewGrades() const {
+    void viewGrades(Course course) const {
         if (course_count == 0)
         {
             cout << "You are not registered in any courses" << endl ;
@@ -61,13 +79,13 @@ public:
         cout << "Your Grades :" << endl;
         for (int i = 0; i < course_count ; i++ )
         {
-            cout<< "Your Course : "registered_courses[i] << "Your Grade : "<< Course.grades[i] ;
+        cout<< "Your Course :" << registered_courses[i].name << "Your Grade : "<< course.grades[i] ;
         }
 
 
     }
 
-    void averageGrade()
+    void averageGrade(Course course)
        {
 
         if (course_count == 0) {
@@ -80,14 +98,17 @@ public:
         for (int i = 0 ; i < course_count ; i++)
         {
 
-            sum+= Course.grades[i] ;
+            sum+= course.grades[i] ;
         }
      cout << sum / course_count ;
+    }
+
 
     int get_Number_Of_Courses()
     {
         return course_count ;
     }
+
 
 };
 
