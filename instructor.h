@@ -6,6 +6,8 @@
 #define INSTRUCTOR_H
 #include <iostream>
 #include <vector>
+
+#include "student.h"
 #include "User.h"
 
 using namespace std;
@@ -18,7 +20,7 @@ public:
         courses = c;
     }
 
-    void add_course(course& course) {
+    void add_course(Course& course) {
         if (courses.size() >= 5) {
             cout << "Cannot add more than 5 courses." << endl;
             return;
@@ -27,25 +29,23 @@ public:
         cout << " added to list of courses successfully." << endl;
     }
 
-    void remove_course(course& course) {
-        for (auto it = courses.begin();it != courses.end();it++) {
-            if (course == *it) {
-                courses.erase(it);
+    void remove_course(Course& course) {
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses[i].code == course.code) {
+                courses.erase(courses.begin() + i); // Correct erase usage
                 cout << " removed from list of courses successfully." << endl;
                 break;
             }
         }
-
     }
 
     void set_grade(Course& course, Student s, double grade) {
-        //verify ya 5wl student has the course; 
         course.setGrade(s.id,grade);
     }
 
     double max_grade(const Course& course) {
         vector<int>grades=course.grades;
-        maximum = -1;
+        int maximum = -1;
         for (int i = 0;i < grades.size();i++) {
             if (grades[i] > maximum) {
                 maximum = grades[i];
@@ -56,7 +56,7 @@ public:
 
     double min_grade(const Course& course) {
         vector<int>grades=course.grades;
-        minimum = 200;
+        int minimum = 200;
         for (int i = 0;i < grades.size();i++) {
             if (grades[i] < minimum) {
                 minimum = grades[i];

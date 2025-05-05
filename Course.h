@@ -54,6 +54,9 @@ public:
         }
         return grades[index];
     }
+    void setGrade(int id,int grade) {
+        grades.at(id)=grade;
+    }
 };
 
 #endif //COURSE_H
