@@ -38,18 +38,18 @@ public:
 
         // Register student in course
         course.student_ids[course.student_ids.size()] = id ;
-        
+
         course.grades[course.grades.size()] = 0 ;
-        
+
         registered_courses[course_count++] = course ;
-        
+
         cout << " Successfully registered for course: " << course.name << endl ;
         return true ;
     }
 
     bool drop(Course course)
-    
-    
+
+
     {
         for(int i = 0 ; i < course_count ; i++)
         {
@@ -63,13 +63,13 @@ public:
                 course_count--;
                 cout << "Successfully dropped course  " << course.name << endl;
                 return true;
-            }   
-        } 
+            }
+        }
         cout << "Course not found in registered courses" << endl;
         return false;
     }
 
-    void viewGrades(Course course) const {
+    void viewGrades() {
         if (course_count == 0)
         {
             cout << "You are not registered in any courses" << endl ;
@@ -79,7 +79,7 @@ public:
         cout << "Your Grades :" << endl;
         for (int i = 0; i < course_count ; i++ )
         {
-        cout<< "Your Course :" << registered_courses[i].name << "Your Grade : "<< course.grades[i] ;
+        cout<< "Your Course :" << registered_courses[i].name<<endl << "Your Grade : "<< registered_courses[i].getGrade(id)<<endl ;
         }
 
 
