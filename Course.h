@@ -22,6 +22,8 @@ public:
     Course(string name,const int code, int credits, const vector<int> &grades, const vector<int> &student_ids, const vector<int> &instructors_ids)
         : name(move(name)), code(code), credits(credits), grades(grades),student_ids(student_ids), instructors_ids(instructors_ids) {}
 
+        Course(){};
+
 
     void print_grades() {
         for (int i = 0; i < grades.size(); i++) {
