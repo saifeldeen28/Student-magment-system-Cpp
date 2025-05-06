@@ -6,7 +6,7 @@
 using namespace std;
 
 class Student : public User {
-private:
+
     const int MAX_COURSES = 6;
     Course registered_courses[6]; // Array to hold registered courses
     int course_count;
@@ -29,21 +29,21 @@ public:
         // Check if already registered
         for (int i = 0 ; i < course_count ; i++)
         {
-            if (registered_courses[i].name == course.name)
+            if (registered_courses[i].getName() == course.getName())
             {
-                cout << "Already registered for course " << course.name << endl;
+                cout << "Already registered for course " << course.getName() << endl;
                 return false;
             }
         }
 
         // Register student in course
-        course.student_ids[course.student_ids.size()] = id ;
+        course.getStudentIds()[course.getStudentIds().size()] = getId() ;
 
-        course.grades[course.grades.size()] = 0 ;
+        course.getGrades()[course.getGrades().size()] = 0 ;
 
         registered_courses[course_count++] = course ;
 
-        cout << " Successfully registered for course: " << course.name << endl ;
+        cout << " Successfully registered for course: " << course.getName() << endl ;
         return true ;
     }
 
@@ -53,7 +53,7 @@ public:
     {
         for(int i = 0 ; i < course_count ; i++)
         {
-            if (registered_courses[i].name == course.name)
+            if (registered_courses[i].getName() == course.getName())
             {
                 // Remove the course from the registered courses
                 for (int j = i; j < course_count - 1; j++)
@@ -61,7 +61,7 @@ public:
                     registered_courses[j] = registered_courses[j + 1];
                 }
                 course_count--;
-                cout << "Successfully dropped course  " << course.name << endl;
+                cout << "Successfully dropped course  " << course.getName() << endl;
                 return true;
             }
         }
@@ -79,7 +79,7 @@ public:
         cout << "Your Grades :" << endl;
         for (int i = 0; i < course_count ; i++ )
         {
-        cout<< "Your Course :" << registered_courses[i].name<<endl << "Your Grade : "<< registered_courses[i].getGrade(id)<<endl ;
+        cout<< "Your Course :" << registered_courses[i].getName()<<endl << "Your Grade : "<< registered_courses[i].getGrade(getId())<<endl ;
         }
 
 
@@ -98,7 +98,7 @@ public:
         for (int i = 0 ; i < course_count ; i++)
         {
 
-            sum+= course.grades[i] ;
+            sum+= course.getGrades()[i] ;
         }
      cout << sum / course_count ;
     }

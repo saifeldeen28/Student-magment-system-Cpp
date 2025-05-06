@@ -25,12 +25,12 @@ int main() {
     cout<<i1.max_grade(c1)<<endl;
     cout<<i1.min_grade(c1)<<endl;
     i1.remove_course(c2);
-    cout<<i1.courses.size()<<endl;
+    cout<<i1.getCourses().size()<<endl;
     i1.add_course(c2);
-    cout<<i1.courses.size()<<endl;
-    cout<<c1.getGrade(s1.id)<<endl;
-    i1.set_grade(c1,s1,100);// hena fe moshkela
-    cout<<c1.getGrade(s1.id)<<endl;
+    cout<<i1.getCourses().size()<<endl;
+    cout<<c1.getGrade(s1.getId())<<endl;
+    i1.set_grade(c1,s1,2);
+    cout<<c1.getGrade(s1.getId())<<endl;
 
 
 

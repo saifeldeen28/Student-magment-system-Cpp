@@ -13,8 +13,13 @@
 using namespace std;
 
 class Instructor : public User {
-public:
+
     vector<Course> courses;
+
+public:
+    void setCourses(const vector<Course>& newCourses) { courses = newCourses; }
+    vector<Course> getCourses() const { return courses; }
+
 
     Instructor(int id, string username, string password, vector<Course> c) : User(id, username, password) {
         courses = c;
@@ -31,7 +36,7 @@ public:
 
     void remove_course(Course& course) {
         for (int i = 0; i < courses.size(); i++) {
-            if (courses[i].code == course.code) {
+            if (courses[i].getCode() == course.getCode()) {
                 courses.erase(courses.begin() + i); // Correct erase usage
                 cout << " removed from list of courses successfully." << endl;
                 break;
@@ -39,12 +44,12 @@ public:
         }
     }
 
-    void set_grade(Course& course, Student s, double grade) {
-        course.setGrade(s.id,grade);
+    void set_grade(Course& course, Student s, int grade) {
+        course.setGrade(s.getId(),grade);
     }
 
     double max_grade(const Course& course) {
-        vector<int>grades=course.grades;
+        vector<int>grades=course.getGrades();
         int maximum = -1;
         for (int i = 0;i < grades.size();i++) {
             if (grades[i] > maximum) {
@@ -55,7 +60,7 @@ public:
     }
 
     double min_grade(const Course& course) {
-        vector<int>grades=course.grades;
+        vector<int>grades=course.getGrades();
         int minimum = 200;
         for (int i = 0;i < grades.size();i++) {
             if (grades[i] < minimum) {
@@ -66,7 +71,7 @@ public:
     }
 
     double avg_grade(const Course& course) {
-        vector<int>grades=course.grades;
+        vector<int>grades=course.getGrades();
         double total = 0;
         for (int i = 0;i < grades.size();i++) {
             total += grades[i];

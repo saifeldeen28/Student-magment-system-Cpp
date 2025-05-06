@@ -14,7 +14,7 @@
 using namespace std;
 
 class Administrator : public User {
-private:
+
     vector<Course> course_list;
 
 public:
@@ -22,14 +22,14 @@ public:
 
     void add_user(int id, string username, string password, string role, vector<Student>& student_list, vector<Instructor>& instructor_list) {
         for (int i = 0; i < instructor_list.size(); i++) {
-            if (instructor_list[i].id == id || instructor_list[i].username == username) {
+            if (instructor_list[i].getId() == id || instructor_list[i].getUsername() == username) {
                 cout << "User with same ID or username already exists" << endl;
                 return;
             }
         }
 
         for (int i = 0; i < student_list.size(); i++) {
-            if (student_list[i].id == id || student_list[i].username == username) {
+            if (student_list[i].getId() == id || student_list[i].getUsername() == username) {
                 cout << "User with same ID or username already exists" << endl;
                 return;
             }
@@ -56,7 +56,7 @@ public:
         if (role == "instructor") {
             bool found = false;
             for (int i = 0; i < instructor_list.size(); i++) {
-                if (instructor_list[i].id == id) {
+                if (instructor_list[i].getId() == id) {
                     instructor_list.erase(instructor_list.begin() + i);
                     cout << "Instructor removed successfully" << endl;
                     found = true;
@@ -70,7 +70,7 @@ public:
         else if (role == "student") {
             bool found = false;
             for (int i = 0; i < student_list.size(); i++) {
-                if (student_list[i].id == id) {
+                if (student_list[i].getId() == id) {
                     student_list.erase(student_list.begin() + i);
                     cout << "Student removed successfully" << endl;
                     found = true;
@@ -91,7 +91,7 @@ public:
                    const vector<int>& student_ids, const vector<int>& instructors_ids) {
         bool exists = false;
         for (int i = 0; i < course_list.size(); i++) {
-            if (course_list[i].code == code) {
+            if (course_list[i].getCode() == code) {
                 exists = true;
                 break;
             }
@@ -105,7 +105,7 @@ public:
 
         for (int i = 0; i < instructors_ids.size(); i++) {
             for (int j = 0; j < instructor_list.size(); j++) {
-                if (instructor_list[j].id == instructors_ids[i]) {
+                if (instructor_list[j].getId() == instructors_ids[i]) {
                     instructor_list[j].add_course(new_course);
                     break;
                 }
@@ -117,7 +117,7 @@ public:
     void remove_course(int code) {
         bool found = false;
         for (int i = 0; i < course_list.size(); i++) {
-            if (course_list[i].code == code) {
+            if (course_list[i].getCode() == code) {
                 course_list.erase(course_list.begin() + i);
                 cout << "Course removed successfully" << endl;
                 found = true;

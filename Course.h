@@ -10,21 +10,37 @@
 using namespace std;
 
 class Course {
-public:
     string name;
     int code;
     vector<int> instructors_ids;
     int credits;
     vector<int> grades;
     vector<int> student_ids;
-
-    // Improved constructor with initializer list
+public:
+    // constructor
+    Course(){}
     Course(string name,const int code, int credits, const vector<int> &grades, const vector<int> &student_ids, const vector<int> &instructors_ids)
         : name(move(name)), code(code), credits(credits), grades(grades),student_ids(student_ids), instructors_ids(instructors_ids) {}
 
-        Course(){};
+
+    // Setters
+    void setName(const std::string& newName) { name = newName; }
+    void setCode(int newCode) { code = newCode; }
+    void setInstructorsIds(const std::vector<int>& newInstructorsIds) { instructors_ids = newInstructorsIds; }
+    void setCredits(int newCredits) { credits = newCredits; }
+    void setGrades(const std::vector<int>& newGrades) { grades = newGrades; }
+    void setStudentIds(const std::vector<int>& newStudentIds) { student_ids = newStudentIds; }
+
+    // Getters
+    string getName() const { return name; }
+    int getCode() const { return code; }
+    vector<int> getInstructorsIds() const { return instructors_ids; }
+    int getCredits() const { return credits; }
+    vector<int> getGrades() const { return grades; }
+    vector<int> getStudentIds() const { return student_ids; }
 
 
+    //Functions
     void print_grades() {
         for (int i = 0; i < grades.size(); i++) {
             cout<<grades.at(i)<<endl;
@@ -35,27 +51,21 @@ public:
             cout<<instructors_ids.at(i)<<endl;
         }
     }
-    int getGrade(int id){
-        int flag=0;
+    int getGrade(int id) {
         for (int i = 0; i < student_ids.size(); i++) {
             if (student_ids.at(i) == id) {
-                flag=1;
+                return grades[i]; // Directly return the grade if ID is found
             }
         }
-        if (flag==0) {
-            return -1;//no student found
-        }
-        int index;
-        for(int i=0 ; i<student_ids.size();i++){
-            if(id==student_ids[i]){
-                index=i;
-                break;
-            }
-        }
-        return grades[index];
+        return -1; // No student found
     }
     void setGrade(int id,int grade) {
-        grades.at(id)=grade;
+        for (int i = 0; i < student_ids.size(); i++) {
+            if (student_ids.at(i) == id) {
+                grades[i] = grade;
+                return;
+            }
+        }
     }
 };
 
