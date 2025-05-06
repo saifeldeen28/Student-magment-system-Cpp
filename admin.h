@@ -104,8 +104,12 @@ public:
         course_list.push_back(new_course);
 
         for (int i = 0; i < instructors_ids.size(); i++) {
-            // You would need a way to find the instructor by ID and add the course to their list
-            // This would require passing the instructor_list as a parameter or storing it in the Admin class
+            for (int j = 0; j < instructor_list.size(); j++) {
+                if (instructor_list[j].id == instructors_ids[i]) {
+                    instructor_list[j].add_course(new_course);
+                    break;
+                }
+            }
         }
         cout << "Course added successfully" << endl;
     }
