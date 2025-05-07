@@ -1,37 +1,45 @@
 #include <iostream>
 #include <vector>
+
+#include "admin.h"
 #include "User.h"
 #include "Course.h"
 #include "instructor.h"
 #include "student.h"
 using namespace std;
 int main() {
-    //authentication
-    User u1(1,"s","2");
-    vector<int> grades{1,2,35,6,7};
-    vector<int> ids {1,2,35,6,7};
-    vector<int> instructors_ids {1,2,35,6,7};
+    Student s1(1,"saif","123");
+    Student s2(2,"joe","456");
+    Student s3(3,"karim","789");
+    Student s4(4,"mostafa","789");
+    int student_ids[2]={1,2};
+    int student_grades[2]={90,91};
+    int instructor_ids[1]={1};
+    Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
+    //student and course testing
+    c1.add_student(s3.getId(),80);
+    c1.print_grades();
+    c1.drop_stuent(s1.getId());
+    c1.print_grades();
+    s4.add(c1,99);
+    c1.print_grades();
+    s4.viewGrades();
+    s4.drop(c1);
+    c1.print_grades();
+    cout<<endl<<endl;
+    //instructor testing
+    Course* instructor_courses = {&c1};
+    Instructor i1(1,"hassan","123",instructor_courses,1);
+    Student s5(5,"adham","123");
 
-
-    Course c1("n",1,3,grades,ids,instructors_ids);
-    Course c2("m",1,3,grades,ids,instructors_ids);
-    vector<Course> courses={c1,c2};
-    Student s1(1,"s","2");
-    Instructor i1(10,"x","123",courses);
-    s1.add(c1);
-    s1.add(c2);
-    s1.viewGrades();
     cout<<i1.avg_grade(c1)<<endl;
-    cout<<i1.max_grade(c1)<<endl;
     cout<<i1.min_grade(c1)<<endl;
-    i1.remove_course(c2);
-    cout<<i1.getCourses().size()<<endl;
-    i1.add_course(c2);
-    cout<<i1.getCourses().size()<<endl;
-    cout<<c1.getGrade(s1.getId())<<endl;
-    i1.set_grade(c1,s1,2);
-    cout<<c1.getGrade(s1.getId())<<endl;
-
+    s5.add(c1);
+    c1.add_student(s5.getId(),70);
+    i1.set_grade(c1,s5,99);
+    cout<<i1.max_grade(c1)<<endl;
+    s5.viewGrades();
+    i1.remove_course(c1);
 
 
     return 0;

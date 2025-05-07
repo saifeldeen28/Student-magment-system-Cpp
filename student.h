@@ -8,7 +8,7 @@ using namespace std;
 class Student : public User {
 
     const int MAX_COURSES = 6;
-    Course registered_courses[6]; // Array to hold registered courses
+    Course* registered_courses[6]; // now stores pointers
     int course_count;
 
 public:
@@ -16,92 +16,62 @@ public:
         course_count = 0;
     }
 
-    // Add a course
-    bool add(Course course) {
-
-
-        if (course_count >= MAX_COURSES)
-        {
-            cout<< "You have reached the maximum number of courses" << endl;
+    bool add(Course &course, int grade=0) {
+        if (course_count >= MAX_COURSES) {
+            cout << "You have reached the maximum number of courses" << endl;
             return false;
         }
 
-        // Check if already registered
-        for (int i = 0 ; i < course_count ; i++)
-        {
-            if (registered_courses[i].getName() == course.getName())
-            {
-                cout << "Already registered for course " << course.getName() << endl;
-                return false;
-            }
+        if (!course.add_student(getId(), grade)) {
+            cout << "Couldn't add student" << endl;
+            return false;
         }
 
-        // Register student in course
-        course.getStudentIds()[course.getStudentIds().size()] = getId() ;
+        registered_courses[course_count] = &course;
+        course_count++;
 
-        course.getGrades()[course.getGrades().size()] = 0 ;
-
-        registered_courses[course_count++] = course ;
-
-        cout << " Successfully registered for course: " << course.getName() << endl ;
-        return true ;
+        cout << "Successfully registered for course: " << course.getName() << endl;
+        return true;
     }
 
-    bool drop(Course course)
 
-
+    bool drop(Course& course)
     {
-        for(int i = 0 ; i < course_count ; i++)
-        {
-            if (registered_courses[i].getName() == course.getName())
-            {
-                // Remove the course from the registered courses
-                for (int j = i; j < course_count - 1; j++)
-                {
-                    registered_courses[j] = registered_courses[j + 1];
-                }
-                course_count--;
-                cout << "Successfully dropped course  " << course.getName() << endl;
-                return true;
-            }
+        if (course.drop_stuent(getId())) {
+            cout << "Course dropped successfully" << endl;
+            return true;
         }
-        cout << "Course not found in registered courses" << endl;
+        cout << "Couldn't drop student" << endl;
         return false;
     }
 
     void viewGrades() {
-        if (course_count == 0)
-        {
-            cout << "You are not registered in any courses" << endl ;
-            return ;
+        if (course_count == 0) {
+            cout << "You are not registered in any courses" << endl;
+            return;
         }
 
-        cout << "Your Grades :" << endl;
-        for (int i = 0; i < course_count ; i++ )
-        {
-        cout<< "Your Course :" << registered_courses[i].getName()<<endl << "Your Grade : "<< registered_courses[i].getGrade(getId())<<endl ;
+        cout << "Your Grades:" << endl;
+        for (int i = 0; i < course_count; i++) {
+            cout << "Course: " << registered_courses[i]->getName()
+                 << " | Grade: " << registered_courses[i]->getGrade(getId()) << endl;
         }
-
-
     }
 
-    void averageGrade(Course course)
-       {
-
+    void averageGrade() {
         if (course_count == 0) {
-            cout<< "No grades available to calculate average" << endl ;
-            return ;
+            cout << "No grades available to calculate average" << endl;
+            return;
         }
 
         double sum = 0;
-
-        for (int i = 0 ; i < course_count ; i++)
-        {
-
-            sum+= course.getGrades()[i] ;
+        for (int i = 0; i < course_count; i++) {
+            sum += registered_courses[i]->getGrade(getId());
         }
-     cout << sum / course_count ;
+
+        cout << "Average Grade: " << sum / course_count << endl;
     }
+
 
 
     int get_Number_Of_Courses()

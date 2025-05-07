@@ -14,44 +14,68 @@ using namespace std;
 
 class Instructor : public User {
 
-    vector<Course> courses;
+    Course* courses;
+    int course_count;
 
 public:
-    void setCourses(const vector<Course>& newCourses) { courses = newCourses; }
-    vector<Course> getCourses() const { return courses; }
+    void setCourses(Course* newCourses) { courses = newCourses; }
+    Course* getCourses() const { return courses; }
 
 
-    Instructor(int id, string username, string password, vector<Course> c) : User(id, username, password) {
+    Instructor(int id, string username, string password, Course* c,int count) : User(id, username, password) {
         courses = c;
+        course_count = count;
     }
 
     void add_course(Course& course) {
-        if (courses.size() >= 5) {
+        if (course_count >= 5) {
             cout << "Cannot add more than 5 courses." << endl;
             return;
         }
-        courses.push_back(course);
+        Course* new_courses = new Course[course_count + 1];
+
+        for (int i = 0; i < course_count; i++)
+            new_courses[i] = courses[i];
+
+        new_courses[course_count] = course;
+
+        delete[] courses;
+
+        courses = new_courses;
+        course_count++;
+
         cout << " added to list of courses successfully." << endl;
     }
 
     void remove_course(Course& course) {
-        for (int i = 0; i < courses.size(); i++) {
+        for (int i = 0; i < course_count; i++) {
             if (courses[i].getCode() == course.getCode()) {
-                courses.erase(courses.begin() + i); // Correct erase usage
+                Course* new_courses = new Course[course_count - 1];  // Step 1: Allocate smaller array
+
+                for (int j = 0; j < i; j++)                          // Step 2: Copy elements before `i`
+                    new_courses[j] = courses[j];
+
+                for (int j = i + 1; j < course_count; j++)           // Step 3: Copy elements after `i`
+                    new_courses[j - 1] = courses[j];
+
+                delete[] courses;                         // Step 4: Delete old array
+                courses = new_courses;                    // Step 5: Update pointer
+                course_count--;                                      // Step 6: Update count
+
                 cout << " removed from list of courses successfully." << endl;
                 break;
             }
         }
     }
 
-    void set_grade(Course& course, Student s, int grade) {
+    void set_grade(Course& course, Student &s, int grade) {
         course.setGrade(s.getId(),grade);
     }
 
     double max_grade(const Course& course) {
-        vector<int>grades=course.getGrades();
+        int* grades=course.getGrades();
         int maximum = -1;
-        for (int i = 0;i < grades.size();i++) {
+        for (int i = 0;i < course.get_number_of_students();i++) {
             if (grades[i] > maximum) {
                 maximum = grades[i];
             }
@@ -60,9 +84,9 @@ public:
     }
 
     double min_grade(const Course& course) {
-        vector<int>grades=course.getGrades();
+        int* grades=course.getGrades();
         int minimum = 200;
-        for (int i = 0;i < grades.size();i++) {
+        for (int i = 0;i < course.get_number_of_students() ;i++) {
             if (grades[i] < minimum) {
                 minimum = grades[i];
             }
@@ -70,13 +94,13 @@ public:
         return minimum;
     }
 
-    double avg_grade(const Course& course) {
-        vector<int>grades=course.getGrades();
+    double avg_grade(Course& course) {
+        int* grades=course.getGrades();
         double total = 0;
-        for (int i = 0;i < grades.size();i++) {
+        for (int i = 0;i < course.get_number_of_students();i++) {
             total += grades[i];
         }
-        return total / grades.size();
+        return total / course.get_number_of_students();
     }
 };
 
