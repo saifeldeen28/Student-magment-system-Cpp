@@ -12,21 +12,17 @@ using namespace std;
 class Administrator : public User {
     Course* course_list;
     int course_count;
-    int max_courses;
 
 public:
-    Administrator(int id, string username, string password, int maxCourses = 100)
-        : User(id, username, password), max_courses(maxCourses) {
-        course_count = 0;
-        course_list = new Course[max_courses];
+    Administrator(int id, string username, string password,Course* l=nullptr,int count=0)
+        : User(id, username, password){
+        course_count = count;
+        course_list = l;
     }
 
-    ~Administrator() {
-        delete[] course_list;
-    }
 
     void add_student(int id, string username, string password, Student* student_list,
-                    int& student_count, int max_students) {
+                    int& student_count) {
         // Check if student with same ID or username exists
         for (int i = 0; i < student_count; i++) {
             if (student_list[i].getId() == id || student_list[i].getUsername() == username) {
@@ -35,18 +31,17 @@ public:
             }
         }
 
-        if (student_count >= max_students) {
-            cout << "Maximum number of students reached" << endl;
-            return;
+        Student new_student(id, username, password);
+        Student* new_student_list=new Student[student_count+1];
+        for (int i = 0; i < student_count; i++) {
+            new_student_list[i]=student_list[i];
         }
 
-        Student new_student(id, username, password);
-        student_list[student_count++] = new_student;
         cout << "Student added successfully" << endl;
     }
 
     void add_instructor(int id, string username, string password, Instructor* instructor_list,
-                       int& instructor_count, int max_instructors) {
+                       int& instructor_count) {
         // Check if instructor with same ID or username exists
         for (int i = 0; i < instructor_count; i++) {
             if (instructor_list[i].getId() == id || instructor_list[i].getUsername() == username) {
@@ -55,10 +50,6 @@ public:
             }
         }
 
-        if (instructor_count >= max_instructors) {
-            cout << "Maximum number of instructors reached" << endl;
-            return;
-        }
 
         Course* courses = nullptr;
         Instructor new_instructor(id, username, password, courses, 0);
@@ -105,10 +96,7 @@ public:
 
     void add_course(string name, int code, int credits, int* grades,
                    int* student_ids, int* instructors_ids, int num_students, int num_instructors) {
-        if (course_count >= max_courses) {
-            cout << "Maximum number of courses reached" << endl;
-            return;
-        }
+
         for (int i = 0; i < course_count; i++) {
             if (course_list[i].getCode() == code) {
                 cout << "Course with same code already exists" << endl;
@@ -148,9 +136,7 @@ public:
         return course_count;
     }
 
-    int get_max_courses() const {
-        return max_courses;
-    }
+
 };
 
 #endif //ADMIN_H

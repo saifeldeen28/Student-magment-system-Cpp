@@ -17,6 +17,7 @@ private:
 
 public:
     // Constructor
+    User(){}
     User(int id, string username, string password)
         : id(id), username(move(username)), password(move(password)) {}
 

@@ -12,6 +12,7 @@ class Student : public User {
     int course_count;
 
 public:
+    Student():User(){}
     Student(int id, string username, string password) : User(id, username, password) {
         course_count = 0;
     }
@@ -80,6 +81,32 @@ public:
     }
 
 
+
+
+
+    // Copy assignment operator
+    Student& operator=(const Student& other) {
+        // Self-assignment check
+        if (this == &other) {
+            return *this;
+        }
+
+        // Call base class assignment operator to handle User members
+        User::operator=(other);
+
+        // Copy primitive types
+        course_count = other.course_count;
+
+        // Copy the array of Course pointers
+        // Note: We're copying pointers, not deep copying the courses themselves
+        // This is consistent with the add() method that stores references to existing courses
+        for (int i = 0; i < course_count; i++) {
+            registered_courses[i] = other.registered_courses[i];
+        }
+
+        // Return reference to current object
+        return *this;
+    }
 };
 
 #endif // STUDENT_H
