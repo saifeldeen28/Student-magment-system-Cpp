@@ -39,7 +39,9 @@ public:
 
         cout << "Student added successfully" << endl;
     }
-
+	void setCourseList(Course* list) {
+          course_list = list;
+	}
     void add_instructor(int id, string username, string password, Instructor* instructor_list,
                        int& instructor_count) {
         // Check if instructor with same ID or username exists
