@@ -225,7 +225,7 @@ public:
 
                     cout << "Enter number of instructors (0-3): ";
                     cin >> num_instructors;
-                    if (num_instructors > 3) num_instructors = 3; // maximum 3 instructors per course
+                    if (num_instructors > 3) num_instructors = 3; // Maximum 3 instructors per course
 
                     int* instructor_ids = new int[num_instructors];
                     for (int i = 0; i < num_instructors; i++) {
