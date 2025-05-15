@@ -107,6 +107,30 @@ public:
         // Return reference to current object
         return *this;
     }
+
+    double Calculate_GPA()
+    {
+        if (course_count == 0) {
+            cout << "No registered courses. GPA is 0.0" << endl;
+            return 0.0;
+        }
+
+        double total = 0.0;
+        int total_credits = 0;
+
+        for (int i = 0; i < course_count; ++i) {
+            int grade = registered_courses[i]->getGrade(getId());
+            int credits = registered_courses[i]->getCredits();
+
+            total += grade * credits;
+            total_credits += credits;
+        }
+
+        double GPA = (total_credits > 0) ? total / total_credits : 0.0;
+        cout << "GPA: " << GPA << endl;
+        return GPA;
+    }
+
 };
 
 #endif // STUDENT_H
