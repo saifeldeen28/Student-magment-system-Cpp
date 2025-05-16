@@ -20,7 +20,6 @@ The Student Management System is a comprehensive software solution designed to f
 ### Login
 - Launch the program
 - Enter your username and password
-- Select your role (Administrator/Instructor/Student)
 - Click login to access the system
 
 ### Administrator Access
