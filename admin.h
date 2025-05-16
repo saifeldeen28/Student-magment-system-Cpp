@@ -96,18 +96,31 @@ public:
         }
     }
 
-    void add_course(string name, int code, int credits, int* grades,
-                   int* student_ids, int* instructors_ids, int num_students, int num_instructors) {
-
+    void add_course(string name, int code, int credits,
+                   int* student_ids, int* instructors_ids, int num_instructors, 
+                   Instructor* instructor_list, int instructor_count) {
+        
         for (int i = 0; i < course_count; i++) {
             if (course_list[i].get_code() == code) {
                 cout << "Course with same code already exists" << endl;
                 return;
             }
         }
-
-        Course new_course(name, code, credits, student_ids, grades, num_students, instructors_ids, num_instructors);
+        
+        Course new_course(name, code, credits, student_ids, nullptr, 0, instructors_ids, num_instructors);
         course_list[course_count++] = new_course;
+        
+        // Find and update the instructors who teach this course
+        for (int i = 0; i < num_instructors; i++) {
+            int instructor_id = instructors_ids[i];
+            for (int j = 0; j < instructor_count; j++) {
+                if (instructor_list[j].get_id() == instructor_id) {
+                    instructor_list[j].add_course(new_course);
+                    break;
+                }
+            }
+        }
+        
         cout << "Course added successfully" << endl;
     }
 
