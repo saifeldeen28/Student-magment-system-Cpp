@@ -411,6 +411,7 @@ int main() {
         i1,
         administrator
     };
+    int course_count=1;
     while (true) {
         sign_in(all_users,3,student_list,4,instructor_list,1,&c1,1);
     }
