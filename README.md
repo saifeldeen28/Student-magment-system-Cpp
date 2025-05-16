@@ -3,8 +3,8 @@
 ## Team Members
 - **Project Leader:** Saif Eldeen (ID: TBD)
 - **Administrator Module Developer:** Youssef Ahmed (ID: 24-101152)
-- **Student Module Developer:** Youssef Sarwat (ID: TBD)
-- **Instructor Module Developer:** Karim Wael (ID: TBD)
+- **Student Module Developer:** Youssef Tharwat (ID: 24-101128)
+- **Instructor Module Developer:** Karim Wael (ID: 24-101546)
 
 ## Overview
 The Student Management System is a comprehensive software solution designed to facilitate the management of educational institutions. This system provides a user-friendly interface for administrators, instructors, and students to perform their respective roles efficiently. The system ensures secure access through role-based authentication and offers a wide range of features tailored to each user type.
