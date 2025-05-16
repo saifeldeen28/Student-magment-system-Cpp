@@ -347,6 +347,122 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
             }
         }
     }
+ {
+        int choice = 0;
+        while (choice != 5) {
+            cout << "\n=== Administrator Menu ===\n";
+            cout << "1. Add a new user (student/instructor)\n";
+            cout << "2. Remove a user\n";
+            cout << "3. Add a new course\n";
+            cout << "4. Remove a course\n";
+            cout << "5. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1: {
+                    int user_type;
+                    cout << "\n=== Add User ===\n";
+                    cout << "1. Add Student\n";
+                    cout << "2. Add Instructor\n";
+                    cout << "Enter choice: ";
+                    cin >> user_type;
+
+                    int id;
+                    string username, password;
+
+                    cout << "Enter user ID: ";
+                    cin >> id;
+                    cout << "Enter username: ";
+                    cin >> username;
+                    cout << "Enter password: ";
+                    cin >> password;
+
+                    if (user_type == 1) {
+                        admin.add_student(id, username, password, student_list, student_count);
+                    } else if (user_type == 2) {
+                        admin.add_instructor(id, username, password, instructor_list, instructor_count);
+                    } else {
+                        cout << "Invalid choice\n";
+                    }
+                    break;
+                }
+                case 2: {
+                    int user_type;
+                    cout << "\n=== Remove User ===\n";
+                    cout << "1. Remove Student\n";
+                    cout << "2. Remove Instructor\n";
+                    cout << "Enter choice: ";
+                    cin >> user_type;
+
+                    int id;
+                    cout << "Enter user ID to remove: ";
+                    cin >> id;
+
+                    if (user_type == 1) {
+                        admin.remove_student(student_list, student_count, id);
+                    } else if (user_type == 2) {
+                        admin.remove_instructor(instructor_list, instructor_count, id);
+                    } else {
+                        cout << "Invalid choice\n";
+                    }
+                    break;
+                }
+                case 3: {
+                    string name;
+                    int code, credits, num_students = 0, num_instructors = 0;
+
+                    cout << "\n=== Add Course ===\n";
+                    cout << "Enter course name: ";
+                    cin >> name;
+                    cout << "Enter course code: ";
+                    cin >> code;
+                    cout << "Enter credits: ";
+                    cin >> credits;
+
+                    cout << "Enter number of students (0 for none): ";
+                    cin >> num_students;
+
+                    int* student_ids = new int[num_students];
+
+                    for (int i = 0; i < num_students; i++) {
+                        cout << "Enter student ID " << (i+1) << ": ";
+                        cin >> student_ids[i];
+                    }
+
+                    cout << "Enter number of instructors (0-3): ";
+                    cin >> num_instructors;
+                    if (num_instructors > 3) num_instructors = 3; // Maximum 3 instructors per course
+
+                    int* instructor_ids = new int[num_instructors];
+                    for (int i = 0; i < num_instructors; i++) {
+                        cout << "Enter instructor ID " << (i+1) << ": ";
+                        cin >> instructor_ids[i];
+                    }
+
+                    admin.add_course(name, code, credits, student_ids, instructor_ids, num_instructors, instructor_list, instructor_count);
+
+                    delete[] student_ids;
+                    delete[] instructor_ids;
+                    break;
+                }
+                case 4: {
+                    int code;
+                    cout << "\n=== Remove Course ===\n";
+                    cout << "Enter course code to remove: ";
+                    cin >> code;
+                    admin.remove_course(code);
+                    break;
+                }
+                case 5:
+                    cout << "Exiting administrator menu.\n";
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+                    break;
+            }
+        }
+    }
 
 bool sign_in(User* all_users, int users_count, Student* student_list, int student_count,
             Instructor* instructor_list, int instructor_count, Course* course_list, int& course_count) {
