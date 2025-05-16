@@ -308,13 +308,10 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     cin >> num_students;
 
                     int* student_ids = new int[num_students];
-                    int* grades = new int[num_students];
 
                     for (int i = 0; i < num_students; i++) {
                         cout << "Enter student ID " << (i+1) << ": ";
                         cin >> student_ids[i];
-                        cout << "Enter grade for student " << student_ids[i] << ": ";
-                        cin >> grades[i];
                     }
 
                     cout << "Enter number of instructors (0-3): ";
@@ -327,10 +324,9 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                         cin >> instructor_ids[i];
                     }
 
-                    admin.add_course(name, code, credits, grades, student_ids, instructor_ids, num_students, num_instructors);
+                    admin.add_course(name, code, credits, student_ids, instructor_ids, num_instructors, instructor_list, instructor_count);
 
                     delete[] student_ids;
-                    delete[] grades;
                     delete[] instructor_ids;
                     break;
                 }
