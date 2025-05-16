@@ -1,7 +1,60 @@
 # Student Management System
 
+## Team Members
+- **Project Leader:** Saif Eldeen (ID: TBD)
+- **Administrator Module Developer:** Youssef Ahmed (ID: 24-101152)
+- **Student Module Developer:** Youssef Sarwat (ID: TBD)
+- **Instructor Module Developer:** Karim Wael (ID: TBD)
 
-This project implements a student management system designed to streamline administrative tasks and enhance the learning experience within an educational institution. It provides a centralized platform for administrators, instructors, and students to interact with functionalities tailored to their roles.
+## Overview
+The Student Management System is a comprehensive software solution designed to facilitate the management of educational institutions. This system provides a user-friendly interface for administrators, instructors, and students to perform their respective roles efficiently. The system ensures secure access through role-based authentication and offers a wide range of features tailored to each user type.
+
+## How to Run the Program
+1. Ensure you have a C++ compiler installed on your system
+2. Compile the program using the provided makefile or your preferred build system
+3. Run the executable file generated after compilation
+4. The system will start with a login interface where you can enter your credentials
+
+## User Manual
+
+### Login
+- Launch the program
+- Enter your username and password
+- Select your role (Administrator/Instructor/Student)
+- Click login to access the system
+
+### Administrator Access
+1. **Managing Users**
+   - Add new instructors or students
+   - Remove existing users
+   - View all registered users
+
+2. **Managing Courses**
+   - Add new courses to the system
+   - Remove existing courses
+   - Assign instructors to courses
+
+### Instructor Access
+1. **Course Management**
+   - View assigned courses (up to 5 courses)
+   - Add/remove courses from teaching list
+   - Upload course materials
+
+2. **Grade Management**
+   - Enter and update student grades
+   - View grade statistics (max, min, average)
+   - Generate grade reports
+
+### Student Access
+1. **Course Registration**
+   - View available courses
+   - Enroll in courses (up to 6 courses)
+   - Drop courses
+
+2. **Academic Information**
+   - View grades for enrolled courses
+   - Calculate average grade
+   - Access course materials
 
 ## Key Features
 
