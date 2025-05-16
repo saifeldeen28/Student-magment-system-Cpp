@@ -373,7 +373,7 @@ bool sign_in(User* all_users, int users_count, Student* student_list, int studen
     }
     cout<<"Enter password ";
     cin>>password;
-    if (all_users[index].get_password()!=password || (password != "123"&& username!="admin")) {
+    if (all_users[index].get_password()!=password && username!="admin" ) {
         cout<<"Invalid password entered"<<endl;
         return false;
     }
