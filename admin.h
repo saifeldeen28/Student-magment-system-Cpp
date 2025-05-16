@@ -25,7 +25,7 @@ public:
                     int& student_count) {
         // Check if student with same ID or username exists
         for (int i = 0; i < student_count; i++) {
-            if (student_list[i].getId() == id || student_list[i].getUsername() == username) {
+            if (student_list[i].get_id() == id || student_list[i].get_username() == username) {
                 cout << "Student with same ID or username already exists" << endl;
                 return;
             }
@@ -39,14 +39,14 @@ public:
 
         cout << "Student added successfully" << endl;
     }
-	void setCourseList(Course* list) {
+	void set_course_list(Course* list) {
           course_list = list;
 	}
     void add_instructor(int id, string username, string password, Instructor* instructor_list,
                        int& instructor_count) {
         // Check if instructor with same ID or username exists
         for (int i = 0; i < instructor_count; i++) {
-            if (instructor_list[i].getId() == id || instructor_list[i].getUsername() == username) {
+            if (instructor_list[i].get_id() == id || instructor_list[i].get_username() == username) {
                 cout << "Instructor with same ID or username already exists" << endl;
                 return;
             }
@@ -62,7 +62,7 @@ public:
     void remove_student(Student* student_list, int& student_count, int id) {
         bool found = false;
         for (int i = 0; i < student_count; i++) {
-            if (student_list[i].getId() == id) {
+            if (student_list[i].get_id() == id) {
                 // Shift remaining elements left
                 for (int j = i; j < student_count - 1; j++) {
                     student_list[j] = student_list[j + 1];
@@ -81,7 +81,7 @@ public:
     void remove_instructor(Instructor* instructor_list, int& instructor_count, int id) {
         bool found = false;
         for (int i = 0; i < instructor_count; i++) {
-            if (instructor_list[i].getId() == id) {
+            if (instructor_list[i].get_id() == id) {
                 for (int j = i; j < instructor_count - 1; j++) {
                     instructor_list[j] = instructor_list[j + 1];
                 }
@@ -100,7 +100,7 @@ public:
                    int* student_ids, int* instructors_ids, int num_students, int num_instructors) {
 
         for (int i = 0; i < course_count; i++) {
-            if (course_list[i].getCode() == code) {
+            if (course_list[i].get_code() == code) {
                 cout << "Course with same code already exists" << endl;
                 return;
             }
@@ -114,7 +114,7 @@ public:
     void remove_course(int code) {
         bool found = false;
         for (int i = 0; i < course_count; i++) {
-            if (course_list[i].getCode() == code) {
+            if (course_list[i].get_code() == code) {
                 // Shift remaining elements left
                 for (int j = i; j < course_count - 1; j++) {
                     course_list[j] = course_list[j + 1];

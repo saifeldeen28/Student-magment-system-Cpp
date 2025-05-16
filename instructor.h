@@ -5,7 +5,7 @@
 #ifndef INSTRUCTOR_H
 #define INSTRUCTOR_H
 #include <iostream>
-#include <vector>
+
 
 #include "student.h"
 #include "User.h"
@@ -18,16 +18,16 @@ class Instructor : public User {
     int course_count;
 
 public:
-    void setCourses(Course* newCourses) { courses = newCourses; }
-    Course* getCourses() const { return courses; }
+    void set_courses(Course* newCourses) { courses = newCourses; }
+    Course* get_courses() const { return courses; }
 
     Instructor() {
-        setUserType("instructor");
+        set_user_type("instructor");
     }
     Instructor(int id, string username, string password, Course* c,int count) : User(id, username, password) {
         courses = c;
         course_count = count;
-        setUserType("instructor");
+        set_user_type("instructor");
     }
 
     void add_course(Course& course) {
@@ -52,7 +52,7 @@ public:
 
     void remove_course(Course& course) {
         for (int i = 0; i < course_count; i++) {
-            if (courses[i].getCode() == course.getCode()) {
+            if (courses[i].get_code() == course.get_code()) {
                 Course* new_courses = new Course[course_count - 1];  // Step 1: Allocate smaller array
 
                 for (int j = 0; j < i; j++)                          // Step 2: Copy elements before `i`
@@ -72,11 +72,11 @@ public:
     }
 
     void set_grade(Course& course, Student &s, int grade) {
-        course.setGrade(s.getId(),grade);
+        course.set_grade(s.get_id(),grade);
     }
 
     double max_grade(const Course& course) {
-        int* grades=course.getGrades();
+        int* grades=course.get_grades();
         int maximum = -1;
         for (int i = 0;i < course.get_number_of_students();i++) {
             if (grades[i] > maximum) {
@@ -87,7 +87,7 @@ public:
     }
 
     double min_grade(const Course& course) {
-        int* grades=course.getGrades();
+        int* grades=course.get_grades();
         int minimum = 200;
         for (int i = 0;i < course.get_number_of_students() ;i++) {
             if (grades[i] < minimum) {
@@ -98,7 +98,7 @@ public:
     }
 
     double avg_grade(Course& course) {
-        int* grades=course.getGrades();
+        int* grades=course.get_grades();
         double total = 0;
         for (int i = 0;i < course.get_number_of_students();i++) {
             total += grades[i];

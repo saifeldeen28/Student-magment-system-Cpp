@@ -22,16 +22,16 @@ public:
         : id(id), username(move(username)), password(move(password)) {}
 
     // Setters
-    void setId(int newId) { id = newId; }
-    void setUsername(const string& newUsername) { username = newUsername; }
-    void setPassword(const string& newPassword) { password = newPassword; }
-    void setUserType(const string& type) { user_type= type; }
+    void set_id(int newId) { id = newId; }
+    void set_username(const string& newUsername) { username = newUsername; }
+    void set_password(const string& newPassword) { password = newPassword; }
+    void set_user_type(const string& type) { user_type= type; }
 
     // Getters
-    int getId() const { return id; }
-    string getUsername() const { return username; }
-    string getPassword() const { return password; }
-    string getUserType() const { return user_type; }
+    int get_id() const { return id; }
+    string get_username() const { return username; }
+    string get_password() const { return password; }
+    string get_user_type() const { return user_type; }
 
 
 };

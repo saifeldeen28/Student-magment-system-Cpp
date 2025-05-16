@@ -6,7 +6,7 @@
 #define COURSE_H
 #include <string>
 #include <utility>
-#include <vector>
+
 using namespace std;
 
 class Course {
@@ -42,21 +42,21 @@ public:
 
 
     // Setters
-    void setName(const std::string& newName) { name = newName; }
-    void setCode(int newCode) { code = newCode; }
-    void setInstructorsIds(int* ids) { instructors_ids = ids; }
-    void setCredits(int newCredits) { credits = newCredits; }
-    void setGrades(int* g) { grades = g; }
-    void setStudentIds(int* stu,int n) { student_ids = stu; number_of_students = n; }
+    void set_name(const std::string& newName) { name = newName; }
+    void set_code(int newCode) { code = newCode; }
+    void set_instructors_ids(int* ids) { instructors_ids = ids; }
+    void set_credits(int newCredits) { credits = newCredits; }
+    void set_grades(int* g) { grades = g; }
+    void set_student_ids(int* stu,int n) { student_ids = stu; number_of_students = n; }
 
 
     // Getters
-    string getName() const { return name; }
-    int getCode() const { return code; }
-    int* getInstructorsIds() const { return instructors_ids; }
-    int getCredits() const { return credits; }
-    int* getGrades() const { return grades; }
-    int* getStudentIds() const { return student_ids; }
+    string get_name() const { return name; }
+    int get_code() const { return code; }
+    int* get_instructors_ids() const { return instructors_ids; }
+    int get_credits() const { return credits; }
+    int* get_grades() const { return grades; }
+    int* get_student_ids() const { return student_ids; }
     int get_number_of_students() const { return number_of_students; }
 
     //Functions
@@ -70,7 +70,7 @@ public:
             cout<<instructors_ids[i]<<endl;
         }
     }
-    int getGrade(int id) {
+    int get_grade(int id) {
         for (int i = 0; i < number_of_students; i++) {
             if (student_ids[i] == id) {
                 return grades[i]; // Directly return the grade if ID is found
@@ -78,7 +78,7 @@ public:
         }
         return -1; // No student found
     }
-    void setGrade(int id,int grade) {
+    void set_grade(int id,int grade) {
         for (int i = 0; i < number_of_students; i++) {
             if (student_ids[i] == id) {
                 grades[i] = grade;
@@ -111,7 +111,7 @@ public:
 
         return true;
     }
-    bool drop_stuent(int id) {
+    bool drop_student(int id) {
         for (int i = 0; i < number_of_students; i++) {
             if (student_ids[i] == id) {
                 for (int j = i; j < number_of_students-1; j++) {
