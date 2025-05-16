@@ -21,10 +21,13 @@ public:
     void setCourses(Course* newCourses) { courses = newCourses; }
     Course* getCourses() const { return courses; }
 
-
+    Instructor() {
+        setUserType("instructor");
+    }
     Instructor(int id, string username, string password, Course* c,int count) : User(id, username, password) {
         courses = c;
         course_count = count;
+        setUserType("instructor");
     }
 
     void add_course(Course& course) {

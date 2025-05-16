@@ -12,9 +12,12 @@ class Student : public User {
     int course_count;
 
 public:
-    Student():User(){}
+    Student() {
+        setUserType("student");
+    }
     Student(int id, string username, string password) : User(id, username, password) {
         course_count = 0;
+        setUserType("student");
     }
 
     bool add(Course &course, int grade=0) {
@@ -130,7 +133,6 @@ public:
         cout << "GPA: " << GPA << endl;
         return GPA;
     }
-
 };
 
 #endif // STUDENT_H

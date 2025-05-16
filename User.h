@@ -14,7 +14,7 @@ private:
     int id;
     string username;
     string password;
-
+    string user_type;
 public:
     // Constructor
     User(){}
@@ -25,11 +25,15 @@ public:
     void setId(int newId) { id = newId; }
     void setUsername(const string& newUsername) { username = newUsername; }
     void setPassword(const string& newPassword) { password = newPassword; }
+    void setUserType(const string& type) { user_type= type; }
 
     // Getters
     int getId() const { return id; }
     string getUsername() const { return username; }
     string getPassword() const { return password; }
+    string getUserType() const { return user_type; }
+
+
 };
 
 #endif //USER_H
