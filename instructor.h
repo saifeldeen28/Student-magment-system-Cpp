@@ -20,6 +20,7 @@ class Instructor : public User {
 public:
     void set_courses(Course* newCourses) { courses = newCourses; }
     Course* get_courses() const { return courses; }
+    int get_courses_count() const { return course_count; }
 
     Instructor() {
         set_user_type("instructor");
