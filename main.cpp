@@ -7,7 +7,28 @@
 #include "instructor.h"
 #include "student.h"
 using namespace std;
-void show_student_main_menu(Student &student) {
+
+// Helper function to find a course by code
+Course* find_course_by_code(Course* course_list, int course_count, int code) {
+    for (int i = 0; i < course_count; i++) {
+        if (course_list[i].get_code() == code) {
+            return &course_list[i];
+        }
+    }
+    return nullptr;
+}
+
+// Helper function to find a student by ID
+Student* find_student_by_id(Student* student_list, int student_count, int id) {
+    for (int i = 0; i < student_count; i++) {
+        if (student_list[i].get_id() == id) {
+            return &student_list[i];
+        }
+    }
+    return nullptr;
+}
+
+void show_student_main_menu(Student &student, Course* course_list, int course_count) {
     int choice = 0;
     while (choice != 6) {
         cout << "\n=== Student Menu ===\n";
@@ -25,14 +46,10 @@ void show_student_main_menu(Student &student) {
                 int course_code;
                 cout << "Enter course code to register: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course_to_add = nullptr;
-                // This would need access to course list
-                // For now just showing the concept
+
+                Course* course_to_add = find_course_by_code(course_list, course_count, course_code);
                 if (course_to_add) {
                     student.add(*course_to_add);
-                    cout << "Successfully registered in course.\n";
                 } else {
                     cout << "Course not found.\n";
                 }
@@ -42,14 +59,10 @@ void show_student_main_menu(Student &student) {
                 int course_code;
                 cout << "Enter course code to drop: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course_to_drop = nullptr;
-                // This would need access to course list
-                // For now just showing the concept
+
+                Course* course_to_drop = find_course_by_code(course_list, course_count, course_code);
                 if (course_to_drop) {
                     student.drop(*course_to_drop);
-                    cout << "Successfully dropped course.\n";
                 } else {
                     cout << "Course not found or not registered.\n";
                 }
@@ -59,20 +72,25 @@ void show_student_main_menu(Student &student) {
                 int course_code;
                 cout << "Enter course code to view grade: ";
                 cin >> course_code;
-                
-                // This would need to be implemented to find a specific course
-                // For now, viewGrades() shows all grades
-                student.view_grades();
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (course) {
+                    int grade = course->get_grade(student.get_id());
+                    if (grade != -1) {
+                        cout << "Your grade in " << course->get_name() << " is: " << grade << endl;
+                    } else {
+                        cout << "You are not registered in this course.\n";
+                    }
+                } else {
+                    cout << "Course not found.\n";
+                }
                 break;
             }
             case 4: {
-                // Calculate and display average grade
-                // This would need to be implemented
-                cout << "Average grade functionality to be implemented.\n";
+                student.average_grade();
                 break;
             }
             case 5: {
-                // View all registered courses
                 student.view_grades();
                 break;
             }
@@ -85,7 +103,8 @@ void show_student_main_menu(Student &student) {
         }
     }
 }
-void show_instructor_main_menu(Instructor &instructor) {
+
+void show_instructor_main_menu(Instructor &instructor, Course* course_list, int course_count, Student* student_list, int student_count) {
     int choice = 0;
     while (choice != 8) {
         cout << "\n=== Instructor Menu ===\n";
@@ -102,22 +121,26 @@ void show_instructor_main_menu(Instructor &instructor) {
 
         switch (choice) {
             case 1: {
-                // Add course to teaching list
-                // This would need access to course list
-                cout << "Course addition functionality to be implemented.\n";
+                int course_code;
+                cout << "Enter course code to add: ";
+                cin >> course_code;
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (course) {
+                    instructor.add_course(*course);
+                } else {
+                    cout << "Course not found.\n";
+                }
                 break;
             }
             case 2: {
                 int course_code;
                 cout << "Enter course code to remove: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course_to_remove = nullptr;
-                // This would need access to course list
-                if (course_to_remove) {
-                    instructor.remove_course(*course_to_remove);
-                    cout << "Successfully removed course.\n";
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (course) {
+                    instructor.remove_course(*course);
                 } else {
                     cout << "Course not found or not in teaching list.\n";
                 }
@@ -131,17 +154,18 @@ void show_instructor_main_menu(Instructor &instructor) {
                 cin >> student_id;
                 cout << "Enter new grade: ";
                 cin >> grade;
-                
-                // Find course and student
-                Course* course = nullptr;
-                Student* student = nullptr;
-                // This would need access to course and student lists
-                
-                if (course && student) {
-                    instructor.set_grade(*course, *student, grade);
-                    cout << "Grade updated successfully.\n";
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (course) {
+                    Student* student = find_student_by_id(student_list, student_count, student_id);
+                    if (student) {
+                        instructor.set_grade(*course, *student, grade);
+                        cout << "Grade updated successfully.\n";
+                    } else {
+                        cout << "Student not found.\n";
+                    }
                 } else {
-                    cout << "Course or student not found.\n";
+                    cout << "Course not found.\n";
                 }
                 break;
             }
@@ -149,13 +173,10 @@ void show_instructor_main_menu(Instructor &instructor) {
                 int course_code;
                 cout << "Enter course code: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course = nullptr;
-                // This would need access to course list
-                
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
                 if (course) {
-                    int max = instructor.max_grade(*course);
+                    double max = instructor.max_grade(*course);
                     cout << "Maximum grade in course: " << max << endl;
                 } else {
                     cout << "Course not found.\n";
@@ -166,13 +187,10 @@ void show_instructor_main_menu(Instructor &instructor) {
                 int course_code;
                 cout << "Enter course code: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course = nullptr;
-                // This would need access to course list
-                
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
                 if (course) {
-                    int min = instructor.min_grade(*course);
+                    double min = instructor.min_grade(*course);
                     cout << "Minimum grade in course: " << min << endl;
                 } else {
                     cout << "Course not found.\n";
@@ -183,11 +201,8 @@ void show_instructor_main_menu(Instructor &instructor) {
                 int course_code;
                 cout << "Enter course code: ";
                 cin >> course_code;
-                
-                // Find course by code
-                Course* course = nullptr;
-                // This would need access to course list
-                
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
                 if (course) {
                     double avg = instructor.avg_grade(*course);
                     cout << "Average grade in course: " << avg << endl;
@@ -197,9 +212,13 @@ void show_instructor_main_menu(Instructor &instructor) {
                 break;
             }
             case 7: {
-                // View all taught courses
+                Course* courses = instructor.get_courses();
+                int count = instructor.get_courses_count();
                 cout << "Courses taught by " << instructor.get_username() << ":\n";
-                // This would need to be implemented
+                for (int i = 0; i < count; i++) {
+                    cout << (i + 1) << ". " << courses[i].get_name()
+                         << " (Code: " << courses[i].get_code() << ")\n";
+                }
                 break;
             }
             case 8:
@@ -211,6 +230,7 @@ void show_instructor_main_menu(Instructor &instructor) {
         }
     }
 }
+
 void show_administrator_main_menu(Administrator &admin,Student* student_list, int student_count, Instructor* instructor_list, int instructor_count) {
         int choice = 0;
         while (choice != 5) {
@@ -332,7 +352,8 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
         }
     }
 
-bool sign_in(User* all_users,int users_count,Student* student_list, int student_count, Instructor* instructor_list, int instructor_count) {
+bool sign_in(User* all_users, int users_count, Student* student_list, int student_count,
+            Instructor* instructor_list, int instructor_count, Course* course_list, int course_count) {
     string username, password;
     bool flag = false;
     int index = -1;
@@ -360,10 +381,10 @@ bool sign_in(User* all_users,int users_count,Student* student_list, int student_
         show_administrator_main_menu(static_cast<Administrator &>(all_users[index]),student_list,student_count,instructor_list,instructor_count);
     }
     if (all_users[index].get_user_type()=="student") {
-        show_student_main_menu(static_cast<Student &>(all_users[index]));
+        show_student_main_menu(static_cast<Student &>(all_users[index]), course_list, course_count);
     }
     if (all_users[index].get_user_type()=="instructor") {
-        show_instructor_main_menu(static_cast<Instructor &>(all_users[index]));
+        show_instructor_main_menu(static_cast<Instructor &>(all_users[index]), course_list, course_count, student_list, student_count);
     }
     return true;
 }
@@ -390,7 +411,7 @@ int main() {
         i1,
         administrator
     };
-    sign_in(all_users,3,student_list,4,instructor_list,1);
+    sign_in(all_users,3,student_list,4,instructor_list,1,&c1,1);
 
 
 
