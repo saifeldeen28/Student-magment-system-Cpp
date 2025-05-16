@@ -349,7 +349,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
     }
 
 bool sign_in(User* all_users, int users_count, Student* student_list, int student_count,
-            Instructor* instructor_list, int instructor_count, Course* course_list, int course_count) {
+            Instructor* instructor_list, int instructor_count, Course* course_list, int& course_count) {
     string username, password;
     bool flag = false;
     int index = -1;
@@ -407,7 +407,10 @@ int main() {
         i1,
         administrator
     };
-    sign_in(all_users,3,student_list,4,instructor_list,1,&c1,1);
+    int course_count=1;
+    while (true) {
+        sign_in(all_users,3,student_list,4,instructor_list,1,&c1,course_count);
+    }
 
 
 
