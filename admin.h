@@ -21,7 +21,7 @@ public:
     }
 
 
-    void add_student(int id, string username, string password, Student* student_list,
+    void add_student(int id, string username, string password, Student*& student_list,
                     int& student_count) {
         // Check if student with same ID or username exists
         for (int i = 0; i < student_count; i++) {
@@ -31,18 +31,28 @@ public:
             }
         }
 
-        Student new_student(id, username, password);
-        Student* new_student_list=new Student[student_count+1];
+        // Create a new array with increased size
+        Student* new_student_list = new Student[student_count + 1];
+        
+        // Copy existing students
         for (int i = 0; i < student_count; i++) {
-            new_student_list[i]=student_list[i];
+            new_student_list[i] = student_list[i];
         }
+        
+        // Add the new student
+        new_student_list[student_count] = Student(id, username, password);
+        
+        // Free old memory and update the pointer and count
+        delete[] student_list;
+        student_list = new_student_list;
+        student_count++;
 
         cout << "Student added successfully" << endl;
     }
 	void set_course_list(Course* list) {
           course_list = list;
 	}
-    void add_instructor(int id, string username, string password, Instructor* instructor_list,
+    void add_instructor(int id, string username, string password, Instructor*& instructor_list,
                        int& instructor_count) {
         // Check if instructor with same ID or username exists
         for (int i = 0; i < instructor_count; i++) {
@@ -52,10 +62,23 @@ public:
             }
         }
 
-
+        // Create a new array with increased size
+        Instructor* new_instructor_list = new Instructor[instructor_count + 1];
+        
+        // Copy existing instructors
+        for (int i = 0; i < instructor_count; i++) {
+            new_instructor_list[i] = instructor_list[i];
+        }
+        
+        // Add new instructor
         Course* courses = nullptr;
-        Instructor new_instructor(id, username, password, courses, 0);
-        instructor_list[instructor_count++] = new_instructor;
+        new_instructor_list[instructor_count] = Instructor(id, username, password, courses, 0);
+        
+        // Free old memory and update the pointer and count
+        delete[] instructor_list;
+        instructor_list = new_instructor_list;
+        instructor_count++;
+
         cout << "Instructor added successfully" << endl;
     }
 
