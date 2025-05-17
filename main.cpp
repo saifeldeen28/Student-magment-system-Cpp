@@ -418,7 +418,8 @@ int main() {
     Instructor i1(1,"hassan","123",*instructor_courses,1);
     Instructor* instructor_list=new Instructor[initial_instructor_count]{i1};
     int instructor_count = initial_instructor_count;
-    Course* course_list[2] = {&c2, &c1};
+    Course* course_list = new Course[2]{
+    c1,c2};
 
     User** all_users = new User*[6] {
         &student_list[0],
@@ -429,9 +430,9 @@ int main() {
         &administrator
     };
     int all_user_count =6;
-    int course_count=1;
+    int course_count=2;
     while (true) {
-        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count, *course_list,course_count);
+        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count, course_list,course_count);
     }
 
     delete[] student_list;
