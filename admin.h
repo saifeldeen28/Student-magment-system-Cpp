@@ -46,7 +46,7 @@ public:
         }
     }
 
-    void add_student(int id, string username, string password, Student*& student_list,
+    void add_student(int id, string username, string password, Student* student_list,
                     int& student_count) {
         // Check if student with same ID or username exists
         for (int i = 0; i < student_count; i++) {
@@ -77,7 +77,7 @@ public:
 	void set_course_list(Course* list) {
           course_list = list;
 	}
-    void add_instructor(int id, string username, string password, Instructor*& instructor_list,
+    void add_instructor(int id, string username, string password, Instructor* instructor_list,
                        int& instructor_count) {
         // Check if instructor with same ID or username exists
         for (int i = 0; i < instructor_count; i++) {

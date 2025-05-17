@@ -357,7 +357,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
     }
 
 
-bool sign_in(User** all_users, int &users_count, Student* student_list, int &student_count,
+void sign_in(User** all_users, int &users_count, Student* student_list, int &student_count,
             Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count) {
     string username, password;
     bool flag = false;
@@ -365,7 +365,7 @@ bool sign_in(User** all_users, int &users_count, Student* student_list, int &stu
     cout<<"Enter username ";
     cin>>username;
 
-    for (int i = 0; i <= users_count; i++) {
+    for (int i = 0; i < users_count; i++) {
         if (all_users[i]->get_username() == username) {
             flag = true;
             index = i;
@@ -374,24 +374,23 @@ bool sign_in(User** all_users, int &users_count, Student* student_list, int &stu
     }
     if (!flag ) {
         cout<<"Username "<<username <<" does not exist.\n";
-        return false;
+        return ;
     }
     cout<<"Enter password ";
     cin>>password;
     if (all_users[index]->get_password()!=password && username!="admin" ) {
         cout<<"Invalid password entered"<<endl;
-        return false;
+        return ;
     }
     if (username=="admin" && password=="123") {
         show_administrator_main_menu(static_cast<Administrator &>(*all_users[index]),student_list,student_count,instructor_list,instructor_count);
     }
-    if (all_users[index]->get_user_type()=="student") {
+    else if (all_users[index]->get_user_type()=="student") {
         show_student_main_menu(static_cast<Student &>(*all_users[index]), course_list, course_count);
     }
-    if (all_users[index]->get_user_type()=="instructor") {
+    else if (all_users[index]->get_user_type()=="instructor") {
         show_instructor_main_menu(static_cast<Instructor &>(*all_users[index]), course_list, course_count, student_list, student_count);
     }
-    return true;
 }
 
 int main() {
