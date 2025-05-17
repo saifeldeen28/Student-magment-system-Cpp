@@ -4,49 +4,70 @@
 #include "Course.h"
 #include "User.h"
 using namespace std;
-
 class Student : public User {
-
-    const int MAX_COURSES = 6;
-    Course* registered_courses[6]; // now stores pointers
+private:
+    static const int MAX_COURSES = 6 ;
+    Course* registered_courses[MAX_COURSES] ; 
     int course_count;
 
 public:
     Student() {
-        set_user_type("student");
-    }
-    Student(int id, string username, string password) : User(id, username, password) {
-        course_count = 0;
-        set_user_type("student");
+        set_user_type("student") ;
+        course_count = 0 ;
+        for (int i = 0; i < MAX_COURSES; i++) {
+            registered_courses[i] = nullptr ; // Initialize pointers to NULL
+        }
     }
 
-    bool add(Course &course, int grade=0) {
+    Student(int id, string username, string password) : User(id, username, password) {
+        set_user_type("student");
+        course_count = 0 ;
+        for (int i = 0; i < MAX_COURSES; i++) {
+            registered_courses[i] = nullptr; // Initialize pointers
+        }
+    }
+
+    bool add(Course& course , int grade = 0) {
         if (course_count >= MAX_COURSES) {
-            cout << "You have reached the maximum number of courses" << endl;
-            return false;
+            cout << "You cant register for more than " << MAX_COURSES << " courses " << endl ;
+            return false ;
         }
 
         if (!course.add_student(get_id(), grade)) {
-            cout << "Couldn't add student" << endl;
+            cout << " Couldnt add student to the course " << endl ;
             return false;
         }
 
-        registered_courses[course_count] = &course;
+        registered_courses[course_count] = &course ; 
         course_count++;
-
-        cout << "Successfully registered for course: " << course.get_name() << endl;
+        cout << "Successfully registered for " << course.get_name() << endl ;
         return true;
     }
 
+    bool drop(Course& course) {
+        bool found = false ;
+        for (int i = 0; i < course_count; i++) {
+            if (registered_courses[i] == &course) {
+                found = true ;
+                course.drop_student(get_id())  ;
 
-    bool drop(Course& course)
-    {
-        if (course.drop_student(get_id())) {
-            cout << "Course dropped successfully" << endl;
-            return true;
+                for (int j = i; j < course_count - 1; j++) {
+                    registered_courses[j] = registered_courses[j + 1]; // Shift courses left
+                }
+
+                registered_courses[course_count - 1] = nullptr;
+                course_count--;
+
+                cout << "Course dropped successfully " << endl;
+                break;
+            }
         }
-        cout << "Couldn't drop student" << endl;
-        return false;
+        if (!found) {
+            cout << "Course not found in registered list." << endl;
+            return false ;
+        }
+
+        return true;
     }
 
     void view_grades() {
@@ -55,16 +76,14 @@ public:
             return;
         }
 
-        cout << "Your Grades:" << endl;
+        cout << "Your Grades"<<endl ;
         for (int i = 0; i < course_count; i++) {
-            cout << "Course: " << registered_courses[i]->get_name()
-                 << " | Grade: " << registered_courses[i]->get_grade(get_id()) << endl;
+            cout << "Course: " << registered_courses[i]->get_name() << "Grade: " << registered_courses[i]->get_grade(get_id()) << endl;
         }
     }
-
     void average_grade() {
         if (course_count == 0) {
-            cout << "No grades available to calculate average" << endl;
+            cout << "No grades available to calculate an average " << endl ;
             return;
         }
 
@@ -76,54 +95,18 @@ public:
         cout << "Average Grade: " << sum / course_count << endl;
     }
 
-
-
-    int get_Number_Of_Courses()
-    {
-        return course_count ;
-    }
-
-
-
-
-
-    // Copy assignment operator
-    Student& operator=(const Student& other) {
-        // Self-assignment check
-        if (this == &other) {
-            return *this;
-        }
-
-        // Call base class assignment operator to handle User members
-        User::operator=(other);
-
-        // Copy primitive types
-        course_count = other.course_count;
-
-        // Copy the array of Course pointers
-        // Note: We're copying pointers, not deep copying the courses themselves
-        // This is consistent with the add() method that stores references to existing courses
-        for (int i = 0; i < course_count; i++) {
-            registered_courses[i] = other.registered_courses[i];
-        }
-
-        // Return reference to current object
-        return *this;
-    }
-
-    double calculate_GPA()
-    {
+    double calculate_GPA() {
         if (course_count == 0) {
             cout << "No registered courses. GPA is 0.0" << endl;
-            return 0.0;
+            return 0.0 ;
         }
 
-        double total = 0.0;
+        double total = 0.0 ;
         int total_credits = 0;
 
-        for (int i = 0; i < course_count; ++i) {
+        for (int i = 0; i < course_count; i++) {
             int grade = registered_courses[i]->get_grade(get_id());
-            int credits = registered_courses[i]->get_credits();
+            int credits = registered_courses[i]->get_credits() ;
 
             total += grade * credits;
             total_credits += credits;
@@ -132,6 +115,10 @@ public:
         double GPA = (total_credits > 0) ? total / total_credits : 0.0;
         cout << "GPA: " << GPA << endl;
         return GPA;
+    }
+
+    int get_Number_Of_Courses() {
+        return course_count ;
     }
 };
 
