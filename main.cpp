@@ -390,73 +390,44 @@ int main() {
     Student student;
     Instructor instructor;
     Administrator administrator(1,"admin","123");
-    Student s1(1,"saif","123");
-    Student s2(2,"joe","456");
-    Student s3(3,"karim","789");
-    Student s4(4,"mostafa","789");
-    Student student_list[]={s1,s2,s3,s4};
+
+    int initial_student_count = 4;
+    Student* student_list = new Student[initial_student_count];
+    student_list[0] = Student(1,"saif","123");
+    student_list[1] = Student(2,"joe","456");
+    student_list[2] = Student(3,"karim","789");
+    student_list[3] = Student(4,"mostafa","789");
+    int student_count = initial_student_count;
+    
+    // Create course
     int student_ids[2]={1,2};
     int student_grades[2]={90,91};
     int instructor_ids[1]={1};
     Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
-    s1.add(c1);
-    s2.add(c1);
-    Course* instructor_courses = {&c1};
-    Instructor i1(1,"hassan","123",instructor_courses,1);
-    Instructor* instructor_list={&i1};
-    User** all_users = new User*[4] { &s1, &s2, &i1, &administrator };
+    student_list[0].add(c1);
+    student_list[1].add(c1);
+
+    int initial_instructor_count = 1;
+    Instructor* instructor_list = new Instructor[initial_instructor_count];
+    Course* instructor_courses = &c1;
+    instructor_list[0] = Instructor(1,"hassan","123",instructor_courses,1);
+    int instructor_count = initial_instructor_count;
+
+    User** all_users = new User*[4] { 
+        &student_list[0], 
+        &student_list[1], 
+        &instructor_list[0], 
+        &administrator 
+    };
+    
     int course_count=1;
     while (true) {
-        sign_in(all_users,3,student_list,4,instructor_list,1,&c1,course_count);
+        sign_in(all_users,3,student_list,student_count,instructor_list,instructor_count,&c1,course_count);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    ///test cases
-    /*
-    Student s1(1,"saif","123");
-    Student s2(2,"joe","456");
-    Student s3(3,"karim","789");
-    Student s4(4,"mostafa","789");
-    int student_ids[2]={1,2};
-    int student_grades[2]={90,91};
-    int instructor_ids[1]={1};
-    Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
-    //student and course testing
-    c1.add_student(s3.getId(),80);
-    c1.print_grades();
-    c1.drop_stuent(s1.getId());
-    c1.print_grades();
-    s4.add(c1,99);
-    c1.print_grades();
-    s4.viewGrades();
-    s4.drop(c1);
-    c1.print_grades();
-    cout<<endl<<endl;
-    //instructor testing
-    Course* instructor_courses = {&c1};
-    Instructor i1(1,"hassan","123",instructor_courses,1);
-    Student s5(5,"adham","123");
-
-    cout<<i1.avg_grade(c1)<<endl;
-    cout<<i1.min_grade(c1)<<endl;
-    s5.add(c1);
-    c1.add_student(s5.getId(),70);
-    i1.set_grade(c1,s5,99);
-    cout<<i1.max_grade(c1)<<endl;
-    s5.viewGrades();
-    i1.remove_course(c1);*/
-
-
+    delete[] student_list;
+    delete[] instructor_list;
+    delete[] all_users;
 
     return 0;
 }
