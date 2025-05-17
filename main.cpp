@@ -28,7 +28,7 @@ Student* find_student_by_id(Student* student_list, int student_count, int id) {
     return nullptr;
 }
 
-void show_student_main_menu(Student &student, Course* course_list, int course_count) {
+void show_student_main_menu(Student &student, Course* course_list, int &course_count) {
     int choice = 0;
     while (choice != 6) {
         cout << "\n=== Student Menu ===\n";
@@ -104,7 +104,7 @@ void show_student_main_menu(Student &student, Course* course_list, int course_co
     }
 }
 
-void show_instructor_main_menu(Instructor &instructor, Course* course_list, int course_count, Student* student_list, int student_count) {
+void show_instructor_main_menu(Instructor &instructor, Course* course_list, int &course_count, Student* student_list, int &student_count) {
     int choice = 0;
     while (choice != 8) {
         cout << "\n=== Instructor Menu ===\n";
@@ -231,7 +231,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
     }
 }
 
-void show_administrator_main_menu(Administrator &admin,Student* student_list, int student_count, Instructor* instructor_list, int instructor_count) {
+void show_administrator_main_menu(Administrator &admin,Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count) {
         int choice = 0;
         while (choice != 5) {
             cout << "\n=== Administrator Menu ===\n";
@@ -349,8 +349,8 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
     }
 
 
-bool sign_in(User** all_users, int users_count, Student* student_list, int student_count,
-            Instructor* instructor_list, int instructor_count, Course* course_list, int& course_count) {
+bool sign_in(User** all_users, int &users_count, Student* student_list, int &student_count,
+            Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count) {
     string username, password;
     bool flag = false;
     int index = -1;
@@ -398,31 +398,33 @@ int main() {
     student_list[2] = Student(3,"karim","789");
     student_list[3] = Student(4,"mostafa","789");
     int student_count = initial_student_count;
-    
+
     // Create course
     int student_ids[2]={1,2};
     int student_grades[2]={90,91};
     int instructor_ids[1]={1};
     Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
-    student_list[0].add(c1);
-    student_list[1].add(c1);
+    /*student_list[0].add(c1);
+    student_list[1].add(c1);*/
 
     int initial_instructor_count = 1;
-    Instructor* instructor_list = new Instructor[initial_instructor_count];
     Course* instructor_courses = &c1;
-    instructor_list[0] = Instructor(1,"hassan","123",instructor_courses,1);
+    Instructor i1(1,"hassan","123",instructor_courses,1);
+    Instructor* instructor_list=new Instructor[initial_instructor_count]{i1};
     int instructor_count = initial_instructor_count;
 
-    User** all_users = new User*[4] { 
-        &student_list[0], 
-        &student_list[1], 
-        &instructor_list[0], 
-        &administrator 
+    User** all_users = new User*[6] {
+        &student_list[0],
+        &student_list[1],
+        &student_list[2],
+        &student_list[3],
+        &instructor_list[0],
+        &administrator
     };
-    
+    int all_user_count =6;
     int course_count=1;
     while (true) {
-        sign_in(all_users,3,student_list,student_count,instructor_list,instructor_count,&c1,course_count);
+        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count,&c1,course_count);
     }
 
     delete[] student_list;
