@@ -439,5 +439,5 @@ int main() {
     delete[] instructor_list;
     delete[] all_users;
 
-    return 0;
+    return 1;
 }
