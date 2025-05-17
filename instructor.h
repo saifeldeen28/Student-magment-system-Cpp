@@ -106,36 +106,6 @@ public:
         }
         return total / course.get_number_of_students();
     }
-
-
-
-    // Copy assignment operator
-    Instructor& operator=(const Instructor& other) {
-        // Self-assignment check
-        if (this == &other) {
-            return *this;
-        }
-
-        // Call base class assignment operator to handle User members
-        User::operator=(other);
-
-        // Copy primitive types
-        course_count = other.course_count;
-
-        // Delete existing courses array
-        delete[] courses;
-
-        // Allocate new memory for courses
-        courses = new Course[course_count];
-
-        // Deep copy each Course object
-        for (int i = 0; i < course_count; i++) {
-            courses[i] = other.courses[i];  // This uses Course's copy assignment operator
-        }
-
-        // Return reference to current object
-        return *this;
-    }
 };
 
 
