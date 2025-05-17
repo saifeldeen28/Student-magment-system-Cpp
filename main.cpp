@@ -394,8 +394,6 @@ void sign_in(User** all_users, int &users_count, Student* student_list, int &stu
 }
 
 int main() {
-    Student student;
-    Instructor instructor;
     Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;
@@ -407,18 +405,20 @@ int main() {
     int student_count = initial_student_count;
 
     // Create course
-    int student_ids[2]={1,2};
-    int student_grades[2]={90,91};
+    int student_ids[4]={1,2,3,4};
+    int student_grades[4]={90,91,45,65};
     int instructor_ids[1]={1};
     Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
+    Course c2("math",2,4,student_ids,student_grades,2,instructor_ids,1);
     /*student_list[0].add(c1);
     student_list[1].add(c1);*/
 
     int initial_instructor_count = 1;
-    Course* instructor_courses = &c1;
-    Instructor i1(1,"hassan","123",instructor_courses,1);
+    Course* instructor_courses[1] = {&c1};
+    Instructor i1(1,"hassan","123",*instructor_courses,1);
     Instructor* instructor_list=new Instructor[initial_instructor_count]{i1};
     int instructor_count = initial_instructor_count;
+    Course* course_list[2] = {&c2, &c1};
 
     User** all_users = new User*[6] {
         &student_list[0],
@@ -431,7 +431,7 @@ int main() {
     int all_user_count =6;
     int course_count=1;
     while (true) {
-        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count,&c1,course_count);
+        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count, *course_list,course_count);
     }
 
     delete[] student_list;
