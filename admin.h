@@ -20,6 +20,31 @@ public:
         course_list = l;
     }
 
+    void view_students(const Student* student_list, int student_count) {
+        cout << "\n=== Student List ===\n";
+        if (student_count == 0) {
+            cout << "No students registered.\n";
+            return;
+        }
+        
+        for (int i = 0; i < student_count; i++) {
+            cout << (i+1) << ". student: " << student_list[i].get_username() 
+                 << " id=" << student_list[i].get_id() << endl;
+        }
+    }
+    
+    void view_instructors(const Instructor* instructor_list, int instructor_count) {
+        cout << "\n=== Instructor List ===\n";
+        if (instructor_count == 0) {
+            cout << "No instructors registered.\n";
+            return;
+        }
+        
+        for (int i = 0; i < instructor_count; i++) {
+            cout << (i+1) << ". instructor: " << instructor_list[i].get_username() 
+                 << " id=" << instructor_list[i].get_id() << endl;
+        }
+    }
 
     void add_student(int id, string username, string password, Student*& student_list,
                     int& student_count) {

@@ -233,13 +233,15 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
 
 void show_administrator_main_menu(Administrator &admin,Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count) {
         int choice = 0;
-        while (choice != 5) {
+        while (choice != 7) {
             cout << "\n=== Administrator Menu ===\n";
             cout << "1. Add a new user (student/instructor)\n";
             cout << "2. Remove a user\n";
             cout << "3. Add a new course\n";
             cout << "4. Remove a course\n";
-            cout << "5. Exit\n";
+            cout << "5. View all students\n";
+            cout << "6. View all instructors\n";
+            cout << "7. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
 
@@ -339,6 +341,12 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     break;
                 }
                 case 5:
+                    admin.view_students(student_list, student_count);
+                    break;
+                case 6:
+                    admin.view_instructors(instructor_list, instructor_count);
+                    break;
+                case 7:
                     cout << "Exiting administrator menu.\n";
                     break;
                 default:
