@@ -36,6 +36,12 @@ public:
             cout << "Cannot add more than 5 courses." << endl;
             return;
         }
+        for (int i = 0; i < course_count; i++) {
+            if (courses[i].get_code() == course.get_code()) {
+                cout << "Course already exists." << endl;
+                return;
+            }
+        }
         Course* new_courses = new Course[course_count + 1];
 
         for (int i = 0; i < course_count; i++)

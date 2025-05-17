@@ -37,7 +37,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
         cout << "3. View grade in a specific course\n";
         cout << "4. View average grade across all courses\n";
         cout << "5. View registered courses\n";
-        cout << "6. Log out\n";
+        cout << "0. Log out\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -94,7 +94,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 student.view_grades();
                 break;
             }
-            case 6:
+            case 0:
                 cout << "Logging out...\n";
                 break;
             default:
@@ -115,7 +115,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
         cout << "5. View min grade in a course\n";
         cout << "6. View average grade in a course\n";
         cout << "7. View list of courses taught\n";
-        cout << "8. Log out\n";
+        cout << "0. Log out\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -221,7 +221,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 }
                 break;
             }
-            case 8:
+            case 0:
                 cout << "Logging out...\n";
                 break;
             default:
@@ -241,7 +241,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
             cout << "4. Remove a course\n";
             cout << "5. View all students\n";
             cout << "6. View all instructors\n";
-            cout << "7. Exit\n";
+            cout << "0. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
 
@@ -346,7 +346,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                 case 6:
                     admin.view_instructors(instructor_list, instructor_count);
                     break;
-                case 7:
+                case 0:
                     cout << "Exiting administrator menu.\n";
                     break;
                 default:
@@ -357,41 +357,58 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
     }
 
 
-void sign_in(User** all_users, int &users_count, Student* student_list, int &student_count,
-            Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count) {
-    string username, password;
-    bool flag = false;
-    int index = -1;
-    cout<<"Enter username ";
-    cin>>username;
+void sign_in(User** all_users, int& users_count, Student* student_list, int& student_count,
+             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
 
-    for (int i = 0; i < users_count; i++) {
+    cout << "\n==========================" << endl;
+    cout << "         SIGN IN           " << endl;
+    cout << "==========================" << endl;
+
+    string username, password;
+    bool found = false;
+    int index = -1;
+
+    cout << "Username: ";
+    cin >> username;
+
+    for (int i = 0; i < users_count; ++i) {
         if (all_users[i]->get_username() == username) {
-            flag = true;
+            found = true;
             index = i;
             break;
         }
     }
-    if (!flag ) {
-        cout<<"Username "<<username <<" does not exist.\n";
-        return ;
+
+    if (!found) {
+        cout << "\n Username '" << username << "' not found.\n" << endl;
+        return;
     }
-    cout<<"Enter password ";
-    cin>>password;
-    if (all_users[index]->get_password()!=password && username!="admin" ) {
-        cout<<"Invalid password entered"<<endl;
-        return ;
+
+    cout << "Password: ";
+    cin >> password;
+
+    if (all_users[index]->get_password() != password && username != "admin") {
+        cout << "\n Incorrect password. Access denied.\n" << endl;
+        return;
     }
-    if (username=="admin" && password=="123") {
-        show_administrator_main_menu(static_cast<Administrator &>(*all_users[index]),student_list,student_count,instructor_list,instructor_count);
+
+    cout << "\n Welcome, " << username << "!\n" << endl;
+
+    if (username == "admin" && password == "123") {
+        show_administrator_main_menu(static_cast<Administrator&>(*all_users[index]),
+                                     student_list, student_count, instructor_list, instructor_count);
     }
-    else if (all_users[index]->get_user_type()=="student") {
-        show_student_main_menu(static_cast<Student &>(*all_users[index]), course_list, course_count);
+    else if (all_users[index]->get_user_type() == "student") {
+        show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
     }
-    else if (all_users[index]->get_user_type()=="instructor") {
-        show_instructor_main_menu(static_cast<Instructor &>(*all_users[index]), course_list, course_count, student_list, student_count);
+    else if (all_users[index]->get_user_type() == "instructor") {
+        show_instructor_main_menu(static_cast<Instructor&>(*all_users[index]),
+                                  course_list, course_count, student_list, student_count);
     }
+
+    cout << "\n==========================\n" << endl;
 }
+
 
 int main() {
     Administrator administrator(1,"admin","123");
