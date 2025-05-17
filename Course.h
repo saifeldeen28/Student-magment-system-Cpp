@@ -141,10 +141,7 @@ public:
         number_of_students = other.number_of_students;
         number_of_instructors = other.number_of_instructors;
 
-        // Free existing memory
-        delete[] instructors_ids;
-        delete[] grades;
-        delete[] student_ids;
+
 
         // Allocate new memory and deep copy arrays
         instructors_ids = new int[number_of_instructors];

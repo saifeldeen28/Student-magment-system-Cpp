@@ -43,7 +43,7 @@ public:
 
         new_courses[course_count] = course;
 
-        delete[] courses;
+
 
         courses = new_courses;
         course_count++;
@@ -62,7 +62,6 @@ public:
                 for (int j = i + 1; j < course_count; j++)           // Step 3: Copy elements after `i`
                     new_courses[j - 1] = courses[j];
 
-                delete[] courses;                         // Step 4: Delete old array
                 courses = new_courses;                    // Step 5: Update pointer
                 course_count--;                                      // Step 6: Update count
 
