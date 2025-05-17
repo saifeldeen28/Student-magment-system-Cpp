@@ -96,6 +96,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
             }
             case 0:
                 cout << "Logging out...\n";
+                return;
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
@@ -223,6 +224,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
             }
             case 0:
                 cout << "Logging out...\n";
+                return;
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
@@ -254,6 +256,10 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     cout << "Enter choice: ";
                     cin >> user_type;
 
+                    while (user_type != 1 && user_type != 2) {
+                        cout << "Invalid choice. Please try again.\n";
+                        cin>>user_type;
+                    }
                     int id;
                     string username, password;
 
@@ -296,7 +302,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                 }
                 case 3: {
                     string name;
-                    int code, credits, num_students = 0, num_instructors = 0;
+                    int code, credits, num_instructors = 0;
 
                     cout << "\n=== Add Course ===\n";
                     cout << "Enter course name: ";
@@ -305,16 +311,6 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     cin >> code;
                     cout << "Enter credits: ";
                     cin >> credits;
-
-                    cout << "Enter number of students (0 for none): ";
-                    cin >> num_students;
-
-                    int* student_ids = new int[num_students];
-
-                    for (int i = 0; i < num_students; i++) {
-                        cout << "Enter student ID " << (i+1) << ": ";
-                        cin >> student_ids[i];
-                    }
 
                     cout << "Enter number of instructors (0-3): ";
                     cin >> num_instructors;
@@ -326,10 +322,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                         cin >> instructor_ids[i];
                     }
 
-                    admin.add_course(name, code, credits, student_ids, instructor_ids, num_instructors, instructor_list, instructor_count);
-
-                    delete[] student_ids;
-                    delete[] instructor_ids;
+                    admin.add_course(name, code, credits, instructor_ids, num_instructors, instructor_list, instructor_count);
                     break;
                 }
                 case 4: {
@@ -348,7 +341,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     break;
                 case 0:
                     cout << "Exiting administrator menu.\n";
-                    break;
+                    return;
                 default:
                     cout << "Invalid choice. Please try again.\n";
                     break;
@@ -425,10 +418,15 @@ int main() {
     int student_ids[4]={1,2,3,4};
     int student_grades[4]={90,91,45,65};
     int instructor_ids[1]={1};
-    Course c1("physics",1,3,student_ids,student_grades,2,instructor_ids,1);
-    Course c2("math",2,4,student_ids,student_grades,2,instructor_ids,1);
-    /*student_list[0].add(c1);
-    student_list[1].add(c1);*/
+    int number_of_instructors=1;
+    Course c1("physics",1,3,instructor_ids,number_of_instructors);
+    Course c2("math",2,4,instructor_ids,1);
+    student_list[0].add(c1);
+    student_list[1].add(c1);
+    student_list[2].add(c1);
+    student_list[3].add(c1);
+
+
 
     int initial_instructor_count = 1;
     Course* instructor_courses[1] = {&c1};

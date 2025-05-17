@@ -78,7 +78,7 @@ public:
 
         cout << "Your Grades"<<endl ;
         for (int i = 0; i < course_count; i++) {
-            cout << "Course: " << registered_courses[i]->get_name() << "Grade: " << registered_courses[i]->get_grade(get_id()) << endl;
+            cout << "Course: " << registered_courses[i]->get_name()<<endl << "Grade: " << registered_courses[i]->get_grade(get_id()) << endl;
         }
     }
     void average_grade() {

@@ -21,7 +21,7 @@ class Course {
 public:
     // constructor
     Course(){}
-    Course(string name, const int code, int credits, int* student_ids, int* grades, int number_of_students, int* instructors_ids, int number_of_instructors)
+    Course(string name, const int code, int credits, int* instructors_ids, int number_of_instructors, int* student_ids=nullptr, int* grades=nullptr, int number_of_students=0)
     : name(move(name)), code(code), credits(credits), number_of_students(number_of_students), number_of_instructors(number_of_instructors)
     {
         this->student_ids = new int[number_of_students];
@@ -128,7 +128,7 @@ public:
 
 
     // Copy assignment operator
-    Course& operator=(const Course& other) {
+    /*Course& operator=(const Course& other) {
         // Self-assignment check
         if (this == &other) {
             return *this;
@@ -158,7 +158,7 @@ public:
 
         // Return reference to current object
         return *this;
-    }
+    }*/
 };
 
 #endif //COURSE_H

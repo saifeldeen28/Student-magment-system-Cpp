@@ -144,8 +144,8 @@ public:
         }
     }
 
-    void add_course(string name, int code, int credits,
-                   int* student_ids, int* instructors_ids, int num_instructors, 
+    void add_course(const string &name, int code, int credits,
+    int* instructors_ids, int num_instructors,
                    Instructor* instructor_list, int instructor_count) {
         
         for (int i = 0; i < course_count; i++) {
@@ -154,8 +154,8 @@ public:
                 return;
             }
         }
-        
-        Course new_course(name, code, credits, student_ids, nullptr, 0, instructors_ids, num_instructors);
+
+        Course new_course(name, code, credits, instructors_ids, num_instructors);
         course_list[course_count++] = new_course;
         
         // Find and update the instructors who teach this course
