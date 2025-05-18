@@ -151,12 +151,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 int course_code, student_id, grade;
                 cout << "Enter course code: ";
                 cin >> course_code;
+                Course* course = find_course_by_code(course_list, course_count, course_code);
                 cout << "Enter student ID: ";
                 cin >> student_id;
+                int flag=0;
+                for (int i = 0; i < course->get_number_of_students(); i++) {
+                    if (course->get_student_ids()[i] == student_id) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 0) {
+                    cout << "This student isn't registered for this course ";
+                    return;
+                }
                 cout << "Enter new grade: ";
                 cin >> grade;
 
-                Course* course = find_course_by_code(course_list, course_count, course_code);
+
                 if (course) {
                     Student* student = find_student_by_id(student_list, student_count, student_id);
                     if (student) {
@@ -350,7 +362,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
     }
 
 
-void sign_in(User** all_users, int& users_count, Student* student_list, int& student_count,
+void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
              Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
 
     cout << "\n==========================" << endl;
@@ -365,7 +377,7 @@ void sign_in(User** all_users, int& users_count, Student* student_list, int& stu
     cin >> username;
 
     for (int i = 0; i < users_count; ++i) {
-        if (all_users[i]->get_username() == username) {
+        if (all_users[i]->get_username() == username||username=="admin") {
             found = true;
             index = i;
             break;
@@ -379,19 +391,20 @@ void sign_in(User** all_users, int& users_count, Student* student_list, int& stu
 
     cout << "Password: ";
     cin >> password;
+    if (username=="admin" && password=="123") {
+        show_administrator_main_menu(admin,
+                                     student_list, student_count, instructor_list, instructor_count);
+        return;
+    }
 
-    if (all_users[index]->get_password() != password && username != "admin") {
+    if (all_users[index]->get_password() != password ) {
         cout << "\n Incorrect password. Access denied.\n" << endl;
         return;
     }
 
     cout << "\n Welcome, " << username << "!\n" << endl;
 
-    if (username == "admin" && password == "123") {
-        show_administrator_main_menu(static_cast<Administrator&>(*all_users[index]),
-                                     student_list, student_count, instructor_list, instructor_count);
-    }
-    else if (all_users[index]->get_user_type() == "student") {
+    if (all_users[index]->get_user_type() == "student") {
         show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
     }
     else if (all_users[index]->get_user_type() == "instructor") {
@@ -407,7 +420,7 @@ int main() {
     Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;
-    Student* student_list = new Student[initial_student_count];
+    Student student_list [100];
     student_list[0] = Student(1,"saif","123");
     student_list[1] = Student(2,"joe","456");
     student_list[2] = Student(3,"karim","789");
@@ -431,23 +444,36 @@ int main() {
     int initial_instructor_count = 1;
     Course* instructor_courses[1] = {&c1};
     Instructor i1(1,"hassan","123",*instructor_courses,1);
-    Instructor* instructor_list=new Instructor[initial_instructor_count]{i1};
+    Instructor instructor_list[10];
+    instructor_list[0]=i1;
     int instructor_count = initial_instructor_count;
-    Course* course_list = new Course[2]{
-    c1,c2};
+    Course course_list [20];
+    course_list[0]=c1;
+    course_list[1]=c2;
 
-    User** all_users = new User*[6] {
+    User* all_users [100]  {
         &student_list[0],
         &student_list[1],
         &student_list[2],
         &student_list[3],
         &instructor_list[0],
-        &administrator
     };
     int all_user_count =6;
     int course_count=2;
     while (true) {
-        sign_in(all_users,all_user_count,student_list,student_count,instructor_list,instructor_count, course_list,course_count);
+        sign_in(all_users,administrator,all_user_count,student_list,student_count,instructor_list,instructor_count, course_list,course_count);
+        course_count=administrator.get_course_count();
+        for (int i = 0; i < course_count; ++i) {
+            course_list[i]=administrator.get_course_list()[i];
+        }
+        if (initial_instructor_count+1==instructor_count) {
+            all_users[all_user_count-1]=&instructor_list[instructor_count-1];
+            all_user_count++;
+            initial_instructor_count++;
+        } else {
+            all_users[all_user_count-1]=&student_list[student_count-1];
+            all_user_count++;
+        }
     }
 
     delete[] student_list;
