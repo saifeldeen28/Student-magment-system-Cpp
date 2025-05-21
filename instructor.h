@@ -111,6 +111,25 @@ public:
         }
         return total / course.get_number_of_students();
     }
+
+    void save(int id, string username, string password, Course* courses, int course_count) {
+
+        ofstream file("itest.txt", ios::app);
+
+        if (!file.is_open()) {
+            cout << "Failed to open file." << endl;
+            return;
+        }
+
+        file << id << " " << username << " " << password << " " << course_count << " ";
+
+        for (int i = 0; i < course_count; ++i) {
+            file << courses[i].get_code() << " ";
+        }
+
+        file.close();
+        cout << "Instructor data saved successfully.";
+    }
 };
 
 
