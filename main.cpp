@@ -543,6 +543,7 @@ int main() {
         &student_list[3],
         &instructor_list[0],
     };
+    cout << student_list[3].calculate_GPA();
     int all_user_count =6;
     int course_count=2;
     while (true) {
