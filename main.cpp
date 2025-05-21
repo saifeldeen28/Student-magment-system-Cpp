@@ -1,5 +1,6 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "admin.h"
 #include "User.h"
@@ -415,9 +416,95 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     cout << "\n==========================\n" << endl;
 }
 
+int extractCourseData(const string& filePath, Course courses[], int maxCourses) {
+    ifstream file(filePath);
+    string line;
+    int count = 0;
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file!" << std::endl;
+        return count;
+    }
+
+    while (count < maxCourses && std::getline(file, line)) {
+        istringstream iss(line);
+        int code,credits,num_instructors;
+        string name;
+        iss >> code >> name >> credits >> num_instructors   ;
+
+        int ins_ids[num_instructors];
+        for (int i = 0; i < num_instructors; i++) {
+            if (!(iss >> ins_ids[i])) {
+                break; // Stop if there aren't enough instructor IDs
+            }
+        }
+        courses[count]=Course(name,code,credits,ins_ids,num_instructors);
+
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
+int extractStudentData(const string& filePath, Student students[], int maxStudents,Course courses[],int courses_count) {
+    ifstream file(filePath);
+    string line;
+    int count = 0;
+
+    if (!file.is_open()) {
+        cerr << "Error opening file!" << endl;
+        return count;
+    }
+
+    while (count < maxStudents && getline(file, line)) {
+        std::istringstream iss(line);
+        int id, course_count;
+        std::string name, password;
+        iss >> id >> name >> password >> course_count;
+
+        int course_codes[course_count];
+        int grades[course_count];
+        for (int i = 0; i < course_count; i++) {
+            if (!(iss >> course_codes[i])) {
+                break;
+            }
+        }
+
+        for (int i = 0; i < course_count; i++) {
+            if (!(iss >> grades[i])) {
+                grades[i] = -1;
+            }
+        }
+        Course new_courses[course_count];
+        for (int i = 0; i < course_count; i++) {
+                   new_courses[i]=*find_course_by_code(courses,courses_count,course_codes[i]);
+                }
+        students[count] = Student(id, name, password);
+        for (int i = 0; i < course_count; i++) {
+            students[count].add(new_courses[i],grades[i]);
+        }
+
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
 
 int main() {
-    Administrator administrator(1,"admin","123");
+    Course courses[10];
+    Student students[10];
+    int num=extractCourseData("ctest.txt",courses,10);
+    for (int i = 0; i < num; i++) {
+        cout<<courses[i].get_name()<<endl;
+    }
+    int numm=extractStudentData("stest.txt",students,10,courses,10);
+    for (int i = 0; i < numm; i++) {
+        students[i].view_grades();
+    }
+    /*Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;
     Student student_list [100];
@@ -478,7 +565,7 @@ int main() {
 
     delete[] student_list;
     delete[] instructor_list;
-    delete[] all_users;
+    delete[] all_users;*/
 
     return 1;
 }
