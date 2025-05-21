@@ -488,14 +488,9 @@ int extractStudentData(const string& filePath, Student students[], int maxStuden
 int main() {
     Course courses[10];
     Student students[10];
-    int num=extractCourseData("ctest.txt",courses,10);
-    for (int i = 0; i < num; i++) {
-        cout<<courses[i].get_name()<<endl;
-    }
+    int num=extractCourseData("courses.txt",courses,10);
     int numm=extractStudentData("stest.txt",students,10,courses,2);
-    students[0].average_grade();
-    students[0].save_students("test.text");
-    Instructor i1(1,"a","2",courses,2);
+
 
     /*Administrator administrator(1,"admin","123");
 
