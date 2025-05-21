@@ -179,6 +179,67 @@ public:
         return course_count;
     }
 
+    void display_students_by_GPA(Student* s, int students_count) {
+        double GPA;
+        int range;
+
+        cout << "Choose the range of GPA" << endl;
+        cout << "1. 3.6 - 4.0" << endl;
+        cout << "2. 3.0 - 3.5" << endl;
+        cout << "3. 2.0 - 2.9" << endl;
+        cout << "4. 0.0 - 1.9" << endl;
+        cout << "Enter option: " << endl;;
+        cin >> range;
+
+        cout << "Students in selected GPA range: " << endl;
+
+        bool found = false;
+
+        for (int i = 0; i < students_count; i++) {
+            GPA = s[i].calculate_GPA();
+
+            switch (range) {
+                case 1: {
+                    if (GPA >= 3.6 && GPA <= 4.0) {
+                        cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                        found = true;
+                    }
+                    break;
+                }
+                case 2: {
+                    if (GPA >= 3.0 && GPA <= 3.5) {
+                        cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                        found = true;
+                    }
+                    break;
+                }
+                case 3: {
+                    if (GPA >= 2.0 && GPA <= 2.9) {
+                        cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                        found = true;
+                    }
+                    break;
+                }
+                case 4: {
+                    if (GPA >= 0.0 && GPA <= 1.9) {
+                        cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                        found = true;
+                    }
+                    break;
+                }
+                default: {
+                    cout << "Invalid option selected." << endl;
+                    return;
+                }
+            }
+        }
+
+        if (!found) {
+            cout << "No students found in this GPA range." << endl;
+        }
+    }
+
+
 
 
 };

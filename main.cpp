@@ -256,6 +256,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
             cout << "4. Remove a course\n";
             cout << "5. View all students\n";
             cout << "6. View all instructors\n";
+            cout << "7. View students by GPA\n";
             cout << "0. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
@@ -351,6 +352,9 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     break;
                 case 6:
                     admin.view_instructors(instructor_list, instructor_count);
+                    break;
+                case 7:
+                    admin.display_students_by_GPA(student_list, student_count);
                     break;
                 case 0:
                     cout << "Exiting administrator menu.\n";
@@ -486,7 +490,7 @@ int extractStudentData(const string& filePath, Student students[], int maxStuden
 
 
 int main() {
-    Course courses[10];
+    /*Course courses[10];
     Student students[10];
     int num=extractCourseData("ctest.txt",courses,10);
     for (int i = 0; i < num; i++) {
@@ -495,9 +499,9 @@ int main() {
     int numm=extractStudentData("stest.txt",students,10,courses,2);
     students[0].average_grade();
     students[0].save_students("test.text");
-    Instructor i1(1,"a","2",courses,2);
+    Instructor i1(1,"a","2",courses,2);*/
 
-    /*Administrator administrator(1,"admin","123");
+    Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;
     Student student_list [100];
@@ -514,17 +518,18 @@ int main() {
     int number_of_instructors=1;
     Course c1("physics",1,3,instructor_ids,number_of_instructors);
     Course c2("math",2,4,instructor_ids,1);
-    student_list[0].add(c1);
-    student_list[1].add(c1);
-    student_list[2].add(c1);
-    student_list[3].add(c1);
+    student_list[0].add(c1, 99);
+    student_list[1].add(c1, 30);
+    student_list[2].add(c1, 50);
+    student_list[3].add(c1, 40);
+    student_list[3].add(c2, 80);
 
 
 
     int initial_instructor_count = 1;
     Course* instructor_courses[1] = {&c1};
-    Instructor i1(1,"hassan","123",*instructor_courses,1);
     Instructor instructor_list[10];
+    Instructor i1(1,"karim","123",*instructor_courses,2);
     instructor_list[0]=i1;
     int instructor_count = initial_instructor_count;
     Course course_list [20];
@@ -558,7 +563,7 @@ int main() {
 
     delete[] student_list;
     delete[] instructor_list;
-    delete[] all_users;*/
+    delete[] all_users;
 
     return 0;
 }
