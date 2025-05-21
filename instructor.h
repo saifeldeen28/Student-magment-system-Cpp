@@ -112,16 +112,16 @@ public:
         return total / course.get_number_of_students();
     }
 
-    void save(int id, string username, string password, Course* courses, int course_count) {
+    void save() {
 
         ofstream file("itest.txt", ios::app);
 
         if (!file.is_open()) {
-            cout << "Failed to open file." << endl;
+            cout << "Failed to open file" << endl;
             return;
         }
 
-        file << id << " " << username << " " << password << " " << course_count << " ";
+        file << get_id() << " " << get_username() << " " << get_password() << " " << get_courses_count() << " ";
 
         for (int i = 0; i < course_count; ++i) {
             file << courses[i].get_code() << " ";
