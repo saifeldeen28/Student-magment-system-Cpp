@@ -98,22 +98,35 @@ public:
     double calculate_GPA() {
         if (course_count == 0) {
             cout << "No registered courses. GPA is 0.0" << endl;
-            return 0.0 ;
+            return 0.0;
         }
 
-        double total = 0.0 ;
+        double total_gpa_points = 0.0;
         int total_credits = 0;
 
         for (int i = 0; i < course_count; i++) {
             int grade = registered_courses[i]->get_grade(get_id());
-            int credits = registered_courses[i]->get_credits() ;
+            int credits = registered_courses[i]->get_credits();
 
-            total += grade * credits;
+            double gpa_value;
+
+            if (grade >= 90) gpa_value = 4.0;
+            else if (grade >= 85) gpa_value = 3.7;
+            else if (grade >= 80) gpa_value = 3.3;
+            else if (grade >= 75) gpa_value = 3.0;
+            else if (grade >= 70) gpa_value = 2.7;
+            else if (grade >= 65) gpa_value = 2.3;
+            else if (grade >= 60) gpa_value = 2.0;
+            else if (grade >= 55) gpa_value = 1.7;
+            else if (grade >= 50) gpa_value = 1.3;
+            else if (grade >= 45) gpa_value = 1.0;
+            else gpa_value = 0.0;
+
+            total_gpa_points += gpa_value * credits;
             total_credits += credits;
         }
 
-        double GPA = (total_credits > 0) ? total / total_credits : 0.0;
-        cout << "GPA: " << GPA << endl;
+        double GPA = (total_credits > 0) ? total_gpa_points / total_credits : 0.0;
         return GPA;
     }
 
