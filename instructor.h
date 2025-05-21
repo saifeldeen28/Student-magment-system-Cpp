@@ -117,7 +117,7 @@ public:
         ofstream file("itest.txt", ios::app);
 
         if (!file.is_open()) {
-            cout << "Failed to open file." << endl;
+            cout << "Failed to open file" << endl;
             return;
         }
 
