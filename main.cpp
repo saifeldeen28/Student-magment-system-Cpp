@@ -422,11 +422,11 @@ int extractCourseData(const string& filePath, Course courses[], int maxCourses) 
     int count = 0;
 
     if (!file.is_open()) {
-        std::cerr << "Error opening file!" << std::endl;
+        cout << "Error opening file!" << endl;
         return count;
     }
 
-    while (count < maxCourses && std::getline(file, line)) {
+    while (count < maxCourses && getline(file, line)) {
         istringstream iss(line);
         int code,credits,num_instructors;
         string name;
@@ -434,9 +434,8 @@ int extractCourseData(const string& filePath, Course courses[], int maxCourses) 
 
         int ins_ids[num_instructors];
         for (int i = 0; i < num_instructors; i++) {
-            if (!(iss >> ins_ids[i])) {
-                break; // Stop if there aren't enough instructor IDs
-            }
+            iss >> ins_ids[i];
+
         }
         courses[count]=Course(name,code,credits,ins_ids,num_instructors);
 
@@ -458,31 +457,26 @@ int extractStudentData(const string& filePath, Student students[], int maxStuden
     }
 
     while (count < maxStudents && getline(file, line)) {
-        std::istringstream iss(line);
+        istringstream iss(line);
         int id, course_count;
-        std::string name, password;
+        string name, password;
         iss >> id >> name >> password >> course_count;
 
         int course_codes[course_count];
         int grades[course_count];
         for (int i = 0; i < course_count; i++) {
-            if (!(iss >> course_codes[i])) {
-                break;
-            }
+            iss >> course_codes[i];
         }
-
         for (int i = 0; i < course_count; i++) {
-            if (!(iss >> grades[i])) {
-                grades[i] = -1;
-            }
+            iss >> grades[i];
         }
-        Course new_courses[course_count];
+        Course* new_courses[course_count];
         for (int i = 0; i < course_count; i++) {
-                   new_courses[i]=*find_course_by_code(courses,courses_count,course_codes[i]);
+                   new_courses[i]=find_course_by_code(courses,courses_count,course_codes[i]);
                 }
         students[count] = Student(id, name, password);
         for (int i = 0; i < course_count; i++) {
-            students[count].add(new_courses[i],grades[i]);
+            students[count].add(*new_courses[i],grades[i]);
         }
 
         count++;
@@ -500,10 +494,8 @@ int main() {
     for (int i = 0; i < num; i++) {
         cout<<courses[i].get_name()<<endl;
     }
-    int numm=extractStudentData("stest.txt",students,10,courses,10);
-    for (int i = 0; i < numm; i++) {
-        students[i].view_grades();
-    }
+    int numm=extractStudentData("stest.txt",students,10,courses,2);
+    students[0].average_grade();
     /*Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;
@@ -567,5 +559,5 @@ int main() {
     delete[] instructor_list;
     delete[] all_users;*/
 
-    return 1;
+    return 0;
 }
