@@ -119,7 +119,6 @@ public:
         }
         return total / course.get_number_of_students();
     }
-
     // Function to save the instructor data to a file
     void save() {
 
