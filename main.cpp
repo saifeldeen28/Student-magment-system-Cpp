@@ -466,8 +466,6 @@ int extractStudentData(const string& filePath, Student students[], int maxStuden
         int grades[course_count];
         for (int i = 0; i < course_count; i++) {
             iss >> course_codes[i];
-        }
-        for (int i = 0; i < course_count; i++) {
             iss >> grades[i];
         }
         Course* new_courses[course_count];
@@ -496,6 +494,9 @@ int main() {
     }
     int numm=extractStudentData("stest.txt",students,10,courses,2);
     students[0].average_grade();
+    students[0].save_students("test.text");
+    Instructor i1(1,"a","2",courses,2);
+
     /*Administrator administrator(1,"admin","123");
 
     int initial_student_count = 4;

@@ -132,7 +132,7 @@ bool save_students(string filename)
 
     for (int i = 0; i < course_count; i++) {
         file << " " << registered_courses[i]->get_code()
-             << " " << registered_courses[i]->get_grade() ;
+             << " " << registered_courses[i]->get_grade(get_id()) ;
     }
 
     file << endl;
