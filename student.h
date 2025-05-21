@@ -120,6 +120,27 @@ public:
     int get_Number_Of_Courses() {
         return course_count ;
     }
+bool save_students(string filename) 
+{
+    ofstream file(filename, ios::app) ;  // Append mode
+    if (!file.is_open()) {
+        cout << "The file os opened " << filename << endl;
+        return false ;
+    }
+
+    file << get_id() << " " << get_username() << " "<<get_password() << " " << course_count ;
+
+    for (int i = 0; i < course_count; i++) {
+        file << " " << registered_courses[i]->get_code()
+             << " " << registered_courses[i]->get_grade() ;
+    }
+
+    file << endl;
+    file.close();
+
+    return true;
+}
+
 };
 
 #endif // STUDENT_H
