@@ -33,16 +33,15 @@ void Instructor::add_course(Course& course) {
             return;
         }
     }
+    course.add_instructor(get_id());
     Course* new_courses = new Course[course_count + 1];
 
-    for (int i = 0; i < course_count; i++)
+    for (int i = 0; i < course_count; i++) {
         new_courses[i] = courses[i];
-
+    }
     new_courses[course_count] = course;
-
     courses = new_courses;
     course_count++;
-
     cout << " added to list of courses successfully." << endl;
 }
 
@@ -67,13 +66,13 @@ void Instructor::remove_course(Course& course) {
 }
 
 void Instructor::set_grade(Course& course, Student &s, int grade) {
-    course.set_grade(s.get_id(),grade);
+    course.set_grade(s.get_id(), grade);
 }
 
 double Instructor::max_grade(const Course& course) {
-    int* grades=course.get_grades();
+    int* grades = course.get_grades();
     int maximum = -1;
-    for (int i = 0;i < course.get_number_of_students();i++) {
+    for (int i = 0; i < course.get_number_of_students(); i++) {
         if (grades[i] > maximum) {
             maximum = grades[i];
         }
@@ -82,9 +81,9 @@ double Instructor::max_grade(const Course& course) {
 }
 
 double Instructor::min_grade(const Course& course) {
-    int* grades=course.get_grades();
+    int* grades = course.get_grades();
     int minimum = 200;
-    for (int i = 0;i < course.get_number_of_students() ;i++) {
+    for (int i = 0; i < course.get_number_of_students(); i++) {
         if (grades[i] < minimum) {
             minimum = grades[i];
         }
@@ -93,10 +92,28 @@ double Instructor::min_grade(const Course& course) {
 }
 
 double Instructor::avg_grade(Course& course) {
-    int* grades=course.get_grades();
+    int* grades = course.get_grades();
     double total = 0;
-    for (int i = 0;i < course.get_number_of_students();i++) {
+    for (int i = 0; i < course.get_number_of_students(); i++) {
         total += grades[i];
     }
     return total / course.get_number_of_students();
+}
+
+void Instructor::save() {
+    ofstream file("instructors.txt", ios::app);
+
+    if (!file.is_open()) {
+        cout << "Failed to open file" << endl;
+        return;
+    }
+
+    file << get_id() << " " << get_username() << " " << get_password() << " " << get_courses_count() << " ";
+
+    for (int i = 0; i < course_count; ++i) {
+        file << courses[i].get_code() << " ";
+    }
+
+    file.close();
+    cout << "Instructor data saved successfully.";
 } 

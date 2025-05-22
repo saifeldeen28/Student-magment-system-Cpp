@@ -2,7 +2,7 @@
 
 Administrator::Administrator(int id, string username, string password, Course l[20], int count)
 : User(id, username, password), course_count(count) {
-    if (l!=nullptr) {
+    if (l != nullptr) {
         for (int i = 0; i < 20; i++) {
             course_list[i] = l[i]; // Copy each element individually
         }
@@ -35,8 +35,7 @@ void Administrator::view_instructors(const Instructor* instructor_list, int inst
     }
 }
 
-void Administrator::add_student(int id, string username, string password, Student* student_list,
-                int& student_count) {
+void Administrator::add_student(int id, string username, string password, Student* student_list, int& student_count) {
     // Check if student with same ID or username exists
     for (int i = 0; i < student_count; i++) {
         if (student_list[i].get_id() == id || student_list[i].get_username() == username) {
@@ -57,8 +56,7 @@ void Administrator::set_course_list(Course* list) {
     }
 }
 
-void Administrator::add_instructor(int id, string username, string password, Instructor* instructor_list,
-                   int& instructor_count) {
+void Administrator::add_instructor(int id, string username, string password, Instructor* instructor_list, int& instructor_count) {
     // Check if instructor with same ID or username exists
     for (int i = 0; i < instructor_count; i++) {
         if (instructor_list[i].get_id() == id || instructor_list[i].get_username() == username) {
@@ -111,10 +109,8 @@ void Administrator::remove_instructor(Instructor* instructor_list, int& instruct
     }
 }
 
-void Administrator::add_course(const string &name, int code, int credits,
-int* instructors_ids, int num_instructors,
-               Instructor* instructor_list, int instructor_count) {
-    
+void Administrator::add_course(const string &name, int code, int credits, int* instructors_ids, int num_instructors, 
+                              Instructor* instructor_list, int instructor_count) {
     for (int i = 0; i < course_count; i++) {
         if (course_list[i].get_code() == code) {
             cout << "Course with same code already exists" << endl;
@@ -164,4 +160,64 @@ const Course* Administrator::get_course_list() const {
 
 int Administrator::get_course_count() const {
     return course_count;
+}
+
+void Administrator::display_students_by_GPA(Student* s, int students_count) {
+    double GPA;
+    int range;
+
+    cout << "Choose the range of GPA" << endl;
+    cout << "1. 3.6 - 4.0" << endl;
+    cout << "2. 3.0 - 3.5" << endl;
+    cout << "3. 2.0 - 2.9" << endl;
+    cout << "4. 0.0 - 1.9" << endl;
+    cout << "Enter option: " << endl;
+    cin >> range;
+
+    cout << "Students in selected GPA range: " << endl;
+
+    bool found = false;
+
+    for (int i = 0; i < students_count; i++) {
+        GPA = s[i].calculate_GPA();
+
+        switch (range) {
+            case 1: {
+                if (GPA >= 3.6 && GPA <= 4.0) {
+                    cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                    found = true;
+                }
+                break;
+            }
+            case 2: {
+                if (GPA >= 3.0 && GPA <= 3.5) {
+                    cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                    found = true;
+                }
+                break;
+            }
+            case 3: {
+                if (GPA >= 2.0 && GPA <= 2.9) {
+                    cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                    found = true;
+                }
+                break;
+            }
+            case 4: {
+                if (GPA >= 0.0 && GPA <= 1.9) {
+                    cout << s[i].get_username() << "  GPA: " << GPA << endl;
+                    found = true;
+                }
+                break;
+            }
+            default: {
+                cout << "Invalid option selected." << endl;
+                return;
+            }
+        }
+    }
+
+    if (!found) {
+        cout << "No students found in this GPA range." << endl;
+    }
 } 
