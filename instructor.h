@@ -18,99 +18,24 @@ class Instructor : public User {
     int course_count;
 
 public:
-    void set_courses(Course* newCourses) { courses = newCourses; }
-    Course* get_courses() const { return courses; }
-    int get_courses_count() const { return course_count; }
+    void set_courses(Course* newCourses);
+    Course* get_courses() const;
+    int get_courses_count() const;
 
-    Instructor() {
-        set_user_type("instructor");
-    }
-    Instructor(int id, string username, string password, Course* c,int count) : User(id, username, password) {
-        courses = c;
-        course_count = count;
-        set_user_type("instructor");
-    }
+    Instructor();
+    Instructor(int id, string username, string password, Course* c, int count);
 
-    void add_course(Course& course) {
-        if (course_count >= 5) {
-            cout << "Cannot add more than 5 courses." << endl;
-            return;
-        }
-        for (int i = 0; i < course_count; i++) {
-            if (courses[i].get_code() == course.get_code()) {
-                cout << "Course already exists." << endl;
-                return;
-            }
-        }
-        Course* new_courses = new Course[course_count + 1];
+    void add_course(Course& course);
 
-        for (int i = 0; i < course_count; i++)
-            new_courses[i] = courses[i];
+    void remove_course(Course& course);
 
-        new_courses[course_count] = course;
+    void set_grade(Course& course, Student &s, int grade);
 
+    double max_grade(const Course& course);
 
+    double min_grade(const Course& course);
 
-        courses = new_courses;
-        course_count++;
-
-        cout << " added to list of courses successfully." << endl;
-    }
-
-    void remove_course(Course& course) {
-        for (int i = 0; i < course_count; i++) {
-            if (courses[i].get_code() == course.get_code()) {
-                Course* new_courses = new Course[course_count - 1];  // Step 1: Allocate smaller array
-
-                for (int j = 0; j < i; j++)                          // Step 2: Copy elements before `i`
-                    new_courses[j] = courses[j];
-
-                for (int j = i + 1; j < course_count; j++)           // Step 3: Copy elements after `i`
-                    new_courses[j - 1] = courses[j];
-
-                courses = new_courses;                    // Step 5: Update pointer
-                course_count--;                                      // Step 6: Update count
-
-                cout << " removed from list of courses successfully." << endl;
-                break;
-            }
-        }
-    }
-
-    void set_grade(Course& course, Student &s, int grade) {
-        course.set_grade(s.get_id(),grade);
-    }
-
-    double max_grade(const Course& course) {
-        int* grades=course.get_grades();
-        int maximum = -1;
-        for (int i = 0;i < course.get_number_of_students();i++) {
-            if (grades[i] > maximum) {
-                maximum = grades[i];
-            }
-        }
-        return maximum;
-    }
-
-    double min_grade(const Course& course) {
-        int* grades=course.get_grades();
-        int minimum = 200;
-        for (int i = 0;i < course.get_number_of_students() ;i++) {
-            if (grades[i] < minimum) {
-                minimum = grades[i];
-            }
-        }
-        return minimum;
-    }
-
-    double avg_grade(Course& course) {
-        int* grades=course.get_grades();
-        double total = 0;
-        for (int i = 0;i < course.get_number_of_students();i++) {
-            total += grades[i];
-        }
-        return total / course.get_number_of_students();
-    }
+    double avg_grade(Course& course);
 };
 
 
