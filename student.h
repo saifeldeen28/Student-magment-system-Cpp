@@ -135,7 +135,7 @@ public:
     }
 bool save_students(string filename)
 {
-    ofstream file(filename, ios::trunc) ;  // Append mode
+    ofstream file(filename, ios::app) ;  // Append mode
     if (!file.is_open()) {
         cout << "The file os opened " << filename << endl;
         return false ;
