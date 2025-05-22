@@ -123,7 +123,7 @@ public:
     // Function to save the instructor data to a file
     void save() {
 
-        ofstream file("itest.txt", ios::app);
+        ofstream file("instructors.txt", ios::app);
 
         if (!file.is_open()) {
             cout << "Failed to open file" << endl;

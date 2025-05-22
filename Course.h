@@ -126,7 +126,7 @@ public:
     }
     bool save_courses(string filename)
     {
-        ofstream file(filename, ios::trunc) ;  // Append mode
+        ofstream file(filename, ios::app) ;  // Append mode
         if (!file.is_open()) {
             cout << "The file os opened " << filename << endl;
             return false ;
@@ -157,7 +157,7 @@ public:
         instructors_ids = new_instructors_ids;  // Assign new array
     }
 
-    void performance_C(Course &c) {
+    /*void performance_C(Course &c) {
         cout << "========================================" << endl;
         cout << "         Course Performance" << endl;
         cout << "========================================" << endl;
@@ -174,7 +174,7 @@ public:
         cout << "========================================" << endl ;
 
 
-    }
+    }*/
 
 
     // Copy assignment operator
