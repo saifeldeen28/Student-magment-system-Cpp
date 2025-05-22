@@ -124,7 +124,57 @@ public:
         }
         return false;
     }
+    bool save_courses(string filename)
+    {
+        ofstream file(filename, ios::app) ;  // Append mode
+        if (!file.is_open()) {
+            cout << "The file os opened " << filename << endl;
+            return false ;
+        }
 
+        file << code << " " << name << " "<<credits << " " << number_of_instructors ;
+
+        for (int i = 0; i < number_of_instructors; i++) {
+            file << " " << instructors_ids[i];
+        }
+
+        file << endl;
+        file.close();
+
+        return true;
+    }
+
+    void add_instructor(int id) {
+        int* new_instructors_ids = new int[number_of_instructors + 1];
+
+        for (int i = 0; i < number_of_instructors; i++) {
+            new_instructors_ids[i] = instructors_ids[i];
+        }
+
+        new_instructors_ids[number_of_instructors] = id;
+        number_of_instructors++;
+
+        instructors_ids = new_instructors_ids;  // Assign new array
+    }
+
+    /*void performance_C(Course &c) {
+        cout << "========================================" << endl;
+        cout << "         Course Performance" << endl;
+        cout << "========================================" << endl;
+        cout<< "Course Report : "<< get_name() << endl ;
+        cout << '------------------------------' <<endl ;
+        cout<<"Total Students : "<< get_number_of_students() << endl ;
+        cout<<"Average Grade : " << get_Average_Grade() ;
+        cout <<"Highest Grade : "<< get_highest_grade() << endl ;
+        cout<< "Lowest Grade : "<< get_lowest_grade() << endl ;
+        cout<< "Passing Students : "<< get_passing_students() << endl ;
+        cout<< "Failing Students : "<< get_failing_students() << endl ;
+        cout << '------------------------------' <<endl ;
+        cout << " Top Students : " << endl ;
+        cout << "========================================" << endl ;
+
+
+    }*/
 
 
     // Copy assignment operator

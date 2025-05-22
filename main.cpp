@@ -1,5 +1,6 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "admin.h"
 #include "User.h"
@@ -376,6 +377,22 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     cout << "Username: ";
     cin >> username;
 
+    if (username=="save") {
+        ofstream file("students.txt", ios::trunc);
+        ofstream file1("courses.txt", ios::trunc);
+        ofstream file2("instructors.txt", ios::trunc);
+
+        for (int i = 0; i < course_count; ++i) {
+            course_list[i].save_courses("courses.txt");
+        }
+        for (int i = 0; i < student_count; ++i) {
+            student_list[i].save_students("students.txt");
+        }
+        for (int i = 0; i < instructor_count; ++i) {
+            instructor_list[i].save();
+        }
+        exit(0);
+    }
     for (int i = 0; i < users_count; ++i) {
         if (all_users[i]->get_username() == username||username=="admin") {
             found = true;
@@ -415,70 +432,149 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     cout << "\n==========================\n" << endl;
 }
 
+int extractCourseData(const string& filePath, Course courses[], int maxCourses) {
+    ifstream file(filePath);
+    string line;
+    int count = 0;
+
+    if (!file.is_open()) {
+        cout << "Error opening file!" << endl;
+        return count;
+    }
+
+    while (count < maxCourses && getline(file, line)) {
+        istringstream iss(line);
+        int code,credits,num_instructors;
+        string name;
+        iss >> code >> name >> credits >> num_instructors   ;
+
+        int ins_ids[num_instructors];
+        for (int i = 0; i < num_instructors; i++) {
+            iss >> ins_ids[i];
+
+        }
+        courses[count]=Course(name,code,credits,ins_ids,num_instructors);
+
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
+int extractStudentData(const string& filePath, Student students[], int maxStudents,Course courses[],int courses_count) {
+    ifstream file(filePath);
+    string line;
+    int count = 0;
+
+    if (!file.is_open()) {
+        cerr << "Error opening file!" << endl;
+        return count;
+    }
+
+    while (count < maxStudents && getline(file, line)) {
+        istringstream iss(line);
+        int id, course_count;
+        string name, password;
+        iss >> id >> name >> password >> course_count;
+
+        int course_codes[course_count];
+        int grades[course_count];
+        for (int i = 0; i < course_count; i++) {
+            iss >> course_codes[i];
+            iss >> grades[i];
+        }
+        Course* new_courses[course_count];
+        for (int i = 0; i < course_count; i++) {
+                   new_courses[i]=find_course_by_code(courses,courses_count,course_codes[i]);
+                }
+        students[count] = Student(id, name, password);
+        for (int i = 0; i < course_count; i++) {
+            students[count].add(*new_courses[i],grades[i]);
+        }
+
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+int extractInstructorData(const string& filePath, Instructor instructors[], int maxInstructors,Course courses[],int courses_count) {
+    ifstream file(filePath);
+    string line;
+    int count = 0;
+
+    if (!file.is_open()) {
+        cerr << "Error opening file!" << endl;
+        return count;
+    }
+
+    while (count < maxInstructors && getline(file, line)) {
+        istringstream iss(line);
+        int id, course_count;
+        string name, password;
+        iss >> id >> name >> password >> course_count;
+
+        int course_codes[course_count];
+        for (int i = 0; i < course_count; i++) {
+            iss >> course_codes[i];
+        }
+        Course* new_courses[course_count];
+        for (int i = 0; i < course_count; i++) {
+            new_courses[i]=find_course_by_code(courses,courses_count,course_codes[i]);
+        }
+        instructors[count]=Instructor(id,name,password,*new_courses,course_count);
+        for (int i = 0; i < course_count; i++) {
+            new_courses[i]->add_instructor(id);
+        }
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
+
 
 int main() {
+    Course course_list[10];
+    Student student_list[10];
+    Instructor instructor_list[10];
+    int courses_count=extractCourseData("courses.txt",course_list,10);
+    int students_count=extractStudentData("students.txt",student_list,10,course_list,courses_count);
+    int instructors_count=extractInstructorData("instructors.txt",instructor_list,10,course_list,courses_count);
+    int inital_student_count=students_count;
+    int inital_instructor_count=instructors_count;
     Administrator administrator(1,"admin","123");
 
-    int initial_student_count = 4;
-    Student student_list [100];
-    student_list[0] = Student(1,"saif","123");
-    student_list[1] = Student(2,"joe","456");
-    student_list[2] = Student(3,"karim","789");
-    student_list[3] = Student(4,"mostafa","789");
-    int student_count = initial_student_count;
 
-    // Create course
-    int student_ids[4]={1,2,3,4};
-    int student_grades[4]={90,91,45,65};
-    int instructor_ids[1]={1};
-    int number_of_instructors=1;
-    Course c1("physics",1,3,instructor_ids,number_of_instructors);
-    Course c2("math",2,4,instructor_ids,1);
-    student_list[0].add(c1);
-    student_list[1].add(c1);
-    student_list[2].add(c1);
-    student_list[3].add(c1);
+    User* all_users [100] ;
+    for (int i = 0; i < students_count; i++) {
+        all_users[i]=&student_list[i];
+    }
+    for (int i = 0; i < instructors_count; i++) {
+        all_users[i]=&instructor_list[i];
+    }
+    int all_user_count =students_count+instructors_count;
 
-
-
-    int initial_instructor_count = 1;
-    Course* instructor_courses[1] = {&c1};
-    Instructor i1(1,"hassan","123",*instructor_courses,1);
-    Instructor instructor_list[10];
-    instructor_list[0]=i1;
-    int instructor_count = initial_instructor_count;
-    Course course_list [20];
-    course_list[0]=c1;
-    course_list[1]=c2;
-
-    User* all_users [100]  {
-        &student_list[0],
-        &student_list[1],
-        &student_list[2],
-        &student_list[3],
-        &instructor_list[0],
-    };
-    int all_user_count =6;
-    int course_count=2;
     while (true) {
-        sign_in(all_users,administrator,all_user_count,student_list,student_count,instructor_list,instructor_count, course_list,course_count);
-        course_count=administrator.get_course_count();
-        for (int i = 0; i < course_count; ++i) {
+        sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count);
+        courses_count=administrator.get_course_count();
+        for (int i = 0; i < courses_count; ++i) {
             course_list[i]=administrator.get_course_list()[i];
         }
-        if (initial_instructor_count+1==instructor_count) {
-            all_users[all_user_count-1]=&instructor_list[instructor_count-1];
+        if (inital_instructor_count+1==instructors_count) {
+            all_users[all_user_count]=&instructor_list[instructors_count-1];
             all_user_count++;
-            initial_instructor_count++;
-        } else {
-            all_users[all_user_count-1]=&student_list[student_count-1];
+            inital_instructor_count++;
+        } else if (inital_student_count+1==students_count){
+            all_users[all_user_count]=&student_list[students_count-1];
             all_user_count++;
         }
     }
-
     delete[] student_list;
     delete[] instructor_list;
     delete[] all_users;
 
-    return 1;
+    return 0;
 }
