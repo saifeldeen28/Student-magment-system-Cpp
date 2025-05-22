@@ -47,7 +47,7 @@ public:
     bool drop(Course& course) {
         bool found = false ;
         for (int i = 0; i < course_count; i++) {
-            if (registered_courses[i] == &course) {
+            if (registered_courses[i]->get_code() == course.get_code()) {
                 found = true ;
                 course.drop_student(get_id())  ;
 
@@ -133,9 +133,9 @@ public:
     int get_Number_Of_Courses() {
         return course_count ;
     }
-bool save_students(string filename) 
+bool save_students(string filename)
 {
-    ofstream file(filename, ios::app) ;  // Append mode
+    ofstream file(filename, ios::trunc) ;  // Append mode
     if (!file.is_open()) {
         cout << "The file os opened " << filename << endl;
         return false ;

@@ -49,6 +49,7 @@ public:
                 return;
             }
         }
+        course.add_instructor(get_id());
         Course* new_courses = new Course[course_count + 1];
 
         for (int i = 0; i < course_count; i++) {
