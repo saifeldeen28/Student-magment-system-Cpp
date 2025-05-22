@@ -157,6 +157,25 @@ public:
         instructors_ids = new_instructors_ids;  // Assign new array
     }
 
+    void performance_C(Course &c) {
+        cout << "========================================" << endl;
+        cout << "         Course Performance" << endl;
+        cout << "========================================" << endl;
+        cout<< "Course Report : "<< get_name() << endl ;
+        cout << '------------------------------' <<endl ;
+        cout<<"Total Students : "<< get_number_of_students() << endl ;
+        cout<<"Average Grade : " << get_Average_Grade() ;
+        cout <<"Highest Grade : "<< get_highest_grade() << endl ;
+        cout<< "Lowest Grade : "<< get_lowest_grade() << endl ;
+        cout<< "Passing Students : "<< get_passing_students() << endl ;
+        cout<< "Failing Students : "<< get_failing_students() << endl ;
+        cout << '------------------------------' <<endl ;
+        cout << " Top Students : " << endl ;
+        cout << "========================================" << endl ;
+
+
+    }
+
 
     // Copy assignment operator
     /*Course& operator=(const Course& other) {

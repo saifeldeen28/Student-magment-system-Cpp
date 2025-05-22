@@ -256,7 +256,6 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
             cout << "4. Remove a course\n";
             cout << "5. View all students\n";
             cout << "6. View all instructors\n";
-            cout << "7. View students by GPA\n";
             cout << "0. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
@@ -353,9 +352,6 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                 case 6:
                     admin.view_instructors(instructor_list, instructor_count);
                     break;
-                case 7:
-                    admin.display_students_by_GPA(student_list, student_count);
-                    break;
                 case 0:
                     cout << "Exiting administrator menu.\n";
                     return;
@@ -381,15 +377,6 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     cout << "Username: ";
     cin >> username;
 
-    if (username=="save") {
-        for (int i = 0; i < course_count; ++i) {
-            course_list[i].save_courses("courses.txt");
-        }
-        for (int i = 0; i < student_count; ++i) {
-            student_list[i].save_students("students.txt");
-        }
-        exit(0);
-    }
     for (int i = 0; i < users_count; ++i) {
         if (all_users[i]->get_username() == username||username=="admin") {
             found = true;
@@ -498,67 +485,91 @@ int extractStudentData(const string& filePath, Student students[], int maxStuden
 }
 
 
-int main() {
-    Course course_list[10];
-    Student student_list[10];
-    int num=extractCourseData("courses.txt",course_list,10);
-    int numm=extractStudentData("students.txt",student_list,10,course_list,num);
-    int inital_student_count=numm;
-    Administrator administrator(1,"admin","123");
 
-    /*Student student_list [100];
+
+int main() {
+
+   // int instructor_ids[1]={1};
+  // int number_of_instructors=1;
+  //  Course c1("physics Ol",1,3,instructor_ids,number_of_instructors);
+    //Course c2("math",2,4,instructor_ids,1);
+    //Course c3("chemistry",3,5,instructor_ids,1);
+    //Course c4("biology",4,6,instructor_ids,1);
+    //Course c5("physics Al",5,3,instructor_ids,1);
+    //Student student(2,"joe","456");
+    //student.add(c1,50);
+    //student.add(c2,80);
+    //student.add(c3,100);
+    //student.add(c4,100);
+    //student.add(c5,97);
+    //student.view_grades();
+    //student.Card() ;
+
+
+
+
+    /*Administrator administrator(1,"admin","123");
+
+    int initial_student_count = 4;
+    Student student_list [100];
     student_list[0] = Student(1,"saif","123");
     student_list[1] = Student(2,"joe","456");
     student_list[2] = Student(3,"karim","789");
-    student_list[3] = Student(4,"mostafa","789");*/
-    // Create course
+    student_list[3] = Student(4,"mostafa","789");
+    int student_count = initial_student_count;
+
+      Create course
     int student_ids[4]={1,2,3,4};
     int student_grades[4]={90,91,45,65};
     int instructor_ids[1]={1};
     int number_of_instructors=1;
-    /*Course c1("physics",1,3,instructor_ids,number_of_instructors);
+    Course c1("physics",1,3,instructor_ids,number_of_instructors);
     Course c2("math",2,4,instructor_ids,1);
-    student_list[0].add(c1, 99);
-    student_list[1].add(c1, 30);
-    student_list[2].add(c1, 50);
-    student_list[3].add(c1, 40);
-    student_list[3].add(c2, 80);*/
+    student_list[0].add(c1);
+    student_list[1].add(c1);
+    student_list[2].add(c1);
+    student_list[3].add(c1);
 
 
 
     int initial_instructor_count = 1;
-    Course* instructor_courses[5];
-    int instructor_courses_count=0;
+    Course* instructor_courses[1] = {&c1};
+    Instructor i1(1,"hassan","123",*instructor_courses,1);
     Instructor instructor_list[10];
-    Instructor i1(1,"karim","123",*instructor_courses,instructor_courses_count);
     instructor_list[0]=i1;
     int instructor_count = initial_instructor_count;
+    Course course_list [20];
+    course_list[0]=c1;
+    course_list[1]=c2;
 
-    User* all_users [100] ;
-    for (int i = 0; i < numm; i++) {
-        all_users[i]=&student_list[i];
-    }
-    all_users[numm]=&i1;
-    int all_user_count =numm+1;
-
+    User* all_users [100]  {
+        &student_list[0],
+        &student_list[1],
+        &student_list[2],
+        &student_list[3],
+        &instructor_list[0],
+    };
+    int all_user_count =6;
+    int course_count=2;
     while (true) {
-        sign_in(all_users,administrator,all_user_count,student_list,numm,instructor_list,instructor_count, course_list,num);
-        num=administrator.get_course_count();
-        for (int i = 0; i < num; ++i) {
+        sign_in(all_users,administrator,all_user_count,student_list,student_count,instructor_list,instructor_count, course_list,course_count);
+        course_count=administrator.get_course_count();
+        for (int i = 0; i < course_count; ++i) {
             course_list[i]=administrator.get_course_list()[i];
         }
         if (initial_instructor_count+1==instructor_count) {
-            all_users[all_user_count]=&instructor_list[instructor_count-1];
+            all_users[all_user_count-1]=&instructor_list[instructor_count-1];
             all_user_count++;
             initial_instructor_count++;
-        } else if (inital_student_count+1==numm){
-            all_users[all_user_count]=&student_list[numm-1];
+        } else {
+            all_users[all_user_count-1]=&student_list[student_count-1];
             all_user_count++;
         }
     }
+
     delete[] student_list;
     delete[] instructor_list;
-    delete[] all_users;
+    delete[] all_users;*/
 
     return 0;
 }
