@@ -218,7 +218,7 @@ public:
         cout << "         Course Performance            " << endl;
         cout << "========================================" << endl;
         cout<< "Course Report : " << get_name() << endl ;
-        cout << '------------------------------' <<endl ;
+        cout << "------------------------------" <<endl ;
         cout<<"Total Students    : "<< get_number_of_students() << endl ;
         cout<<"Average Grade     : " << get_Average_Grade() <<endl;
         cout <<"Highest Grade    : "<< get_highest_grade() << endl ;

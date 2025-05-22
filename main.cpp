@@ -572,9 +572,5 @@ int main() {
             all_user_count++;
         }
     }
-    delete[] student_list;
-    delete[] instructor_list;
-    delete[] all_users;
-
     return 0;
 }
