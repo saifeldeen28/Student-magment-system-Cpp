@@ -47,7 +47,7 @@ public:
     bool drop(Course& course) {
         bool found = false ;
         for (int i = 0; i < course_count; i++) {
-            if (registered_courses[i] == &course) {
+            if (registered_courses[i]->get_code() == course.get_code()) {
                 found = true ;
                 course.drop_student(get_id())  ;
 
@@ -95,7 +95,7 @@ public:
         cout << "Average Grade: " << sum / course_count << endl;
     }
 
- double calculate_GPA() {
+    double calculate_GPA() {
         if (course_count == 0) {
             cout << "No registered courses. GPA is 0.0" << endl;
             return 0.0;
@@ -133,6 +133,26 @@ public:
     int get_Number_Of_Courses() {
         return course_count ;
     }
+bool save_students(string filename)
+{
+    ofstream file(filename, ios::trunc) ;  // Append mode
+    if (!file.is_open()) {
+        cout << "The file os opened " << filename << endl;
+        return false ;
+    }
+
+    file << get_id() << " " << get_username() << " "<<get_password() << " " << course_count ;
+
+    for (int i = 0; i < course_count; i++) {
+        file << " " << registered_courses[i]->get_code()
+             << " " << registered_courses[i]->get_grade(get_id()) ;
+    }
+
+    file << endl;
+    file.close();
+
+    return true;
+}
 };
 
 #endif // STUDENT_H
