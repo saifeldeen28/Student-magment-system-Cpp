@@ -56,8 +56,8 @@ void Instructor::remove_course(Course& course) {
             for (int j = i + 1; j < course_count; j++)           // Step 3: Copy elements after `i`
                 new_courses[j - 1] = courses[j];
 
-            courses = new_courses;                    // Step 5: Update pointer
-            course_count--;                                      // Step 6: Update count
+            courses = new_courses;                               // Step 4: Update pointer
+            course_count--;                                      // Step 5: Update count
 
             cout << " removed from list of courses successfully." << endl;
             break;
@@ -116,4 +116,53 @@ void Instructor::save() {
 
     file.close();
     cout << "Instructor data saved successfully.";
+}
+
+void Instructor::performance_I() {
+    cout << "========================================" << endl;
+    cout << "         Instructor Performance          " << endl;
+    cout << "========================================" << endl;
+    cout << "Instructor: " << get_username() << endl;
+    cout << "Courses Taught: " << course_count << endl;
+    cout << "========================================" << endl;
+
+    if (course_count == 0) {
+        cout << "No courses assigned to this instructor" << endl;
+        return;
+    }
+
+    for (int i = 0; i < course_count; i++) {
+        Course &c = courses[i];
+        cout << "Course: " << c.get_name() << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "Students: " << c.get_number_of_students() << endl;
+        cout << "Average Grade: " << avg_grade(c) << endl;
+        cout << "Max Grade: " << max_grade(c) << endl;
+        cout << "Min Grade: " << min_grade(c) << endl;
+        cout << "Passing Students: " << c.get_passing_students() << endl;
+        cout << "Failing Students: " << c.get_failing_students() << endl;
+
+        int a = 0, b = 0, _c = 0, d = 0, f = 0;
+        int *grades = c.get_grades();
+        int n = c.get_number_of_students();
+        for (int j = 0; j < n; j++) {
+            int g = grades[j];
+            if (g >= 90) a++;
+            else if (g >= 80) b++;
+            else if (g >= 70) _c++;
+            else if (g >= 50) d++;
+            else f++;
+        }
+
+        cout << "Grade Distribution:" << endl;
+        cout << "  A: " << a << endl;
+        cout << "  B: " << b << endl;
+        cout << "  C: " << _c << endl;
+        cout << "  D: " << d << endl;
+        cout << "  F: " << f << endl;
+
+        cout << "----------------------------------------" << endl;
+    }
+
+    cout << "========================================" << endl;
 } 

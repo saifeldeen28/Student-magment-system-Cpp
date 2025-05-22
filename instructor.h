@@ -50,6 +50,9 @@ public:
     
     // Function to save the instructor data to a file
     void save();
+    
+    // Function to display instructor performance report
+    void performance_I();
 };
 
 #endif //INSTRUCTOR_H

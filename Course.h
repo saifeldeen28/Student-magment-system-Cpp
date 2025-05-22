@@ -126,7 +126,7 @@ public:
     }
     bool save_courses(string filename)
     {
-        ofstream file(filename, ios::app) ;  // Append mode
+        ofstream file(filename, ios::trunc) ;  // Append mode
         if (!file.is_open()) {
             cout << "The file os opened " << filename << endl;
             return false ;
@@ -157,24 +157,79 @@ public:
         instructors_ids = new_instructors_ids;  // Assign new array
     }
 
-    /*void performance_C(Course &c) {
+    double get_Average_Grade()
+    {
+        if (number_of_students == 0) return 0.0 ;
+        int sum = 0 ;
+        for (int i = 0 ; i < number_of_students ; i++)
+        {
+            sum += grades[i] ;
+        }
+        return static_cast <double> (sum) / number_of_students ;
+    }
+
+    int get_highest_grade()
+    {
+        if (number_of_students == 0) return -1 ;
+        int highest = grades[0] ;
+        for (int i = 1; i < number_of_students; i++)
+            {
+            if (grades[i] > highest)
+                {
+                highest = grades[i];
+            }
+        }
+        return highest;
+    }
+
+    int get_lowest_grade()
+    {
+        if (number_of_students == 0) return -1 ;
+        int lowest = grades[0] ;
+        for (int i = 1; i < number_of_students; i++)
+            {
+            if (grades[i] < lowest)
+                {
+                lowest = grades[i];
+            }
+        }
+        return lowest ;
+    }
+
+    int get_passing_students()
+    {
+        int count = 0 ;
+        for (int i = 0; i < number_of_students; i++)
+            {
+            if (grades[i] >= 50) {
+                count++ ;
+            }
+        }
+        return count;
+    }
+
+    int get_failing_students()  {
+        return    number_of_students - get_passing_students() ;
+    }
+
+
+    void performance_C() {
         cout << "========================================" << endl;
-        cout << "         Course Performance" << endl;
+        cout << "         Course Performance            " << endl;
         cout << "========================================" << endl;
-        cout<< "Course Report : "<< get_name() << endl ;
+        cout<< "Course Report : " << get_name() << endl ;
         cout << '------------------------------' <<endl ;
-        cout<<"Total Students : "<< get_number_of_students() << endl ;
-        cout<<"Average Grade : " << get_Average_Grade() ;
-        cout <<"Highest Grade : "<< get_highest_grade() << endl ;
-        cout<< "Lowest Grade : "<< get_lowest_grade() << endl ;
+        cout<<"Total Students    : "<< get_number_of_students() << endl ;
+        cout<<"Average Grade     : " << get_Average_Grade() <<endl;
+        cout <<"Highest Grade    : "<< get_highest_grade() << endl ;
+        cout<< "Lowest Grade     : "<< get_lowest_grade() << endl ;
         cout<< "Passing Students : "<< get_passing_students() << endl ;
         cout<< "Failing Students : "<< get_failing_students() << endl ;
-        cout << '------------------------------' <<endl ;
-        cout << " Top Students : " << endl ;
         cout << "========================================" << endl ;
 
 
-    }*/
+    }
+
 
 
     // Copy assignment operator
