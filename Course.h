@@ -5,6 +5,8 @@
 #ifndef COURSE_H
 #define COURSE_H
 #include <string>
+#include <iostream>
+#include <fstream>
 #include <utility>
 
 using namespace std;
@@ -24,16 +26,26 @@ public:
     Course(string name, const int code, int credits, int* instructors_ids, int number_of_instructors, int* student_ids=nullptr, int* grades=nullptr, int number_of_students=0)
     : name(move(name)), code(code), credits(credits), number_of_students(number_of_students), number_of_instructors(number_of_instructors)
     {
-        this->student_ids = new int[number_of_students];
-        this->grades = new int[number_of_students];
-        for (int i = 0; i < number_of_students; i++) {
-            this->student_ids[i] = student_ids[i];
-            this->grades[i] = grades[i];
+        // Initialize student arrays even if they're empty
+        this->student_ids = new int[number_of_students > 0 ? number_of_students : 1];
+        this->grades = new int[number_of_students > 0 ? number_of_students : 1];
+        
+        // Only copy if there are students and the arrays are provided
+        if (number_of_students > 0 && student_ids != nullptr && grades != nullptr) {
+            for (int i = 0; i < number_of_students; i++) {
+                this->student_ids[i] = student_ids[i];
+                this->grades[i] = grades[i];
+            }
         }
 
-        this->instructors_ids = new int[number_of_instructors];
-        for (int i = 0; i < number_of_instructors; i++) {
-            this->instructors_ids[i] = instructors_ids[i];
+        // Initialize instructor arrays
+        this->instructors_ids = new int[number_of_instructors > 0 ? number_of_instructors : 1];
+        
+        // Only copy if there are instructors and the array is provided
+        if (number_of_instructors > 0 && instructors_ids != nullptr) {
+            for (int i = 0; i < number_of_instructors; i++) {
+                this->instructors_ids[i] = instructors_ids[i];
+            }
         }
     }
 
@@ -79,6 +91,10 @@ public:
         return -1; // No student found
     }
     void set_grade(int id,int grade) {
+        if (grade < 0 || grade > 100) {
+            cout << "Invalid grade. Please enter a value between 0 and 100." << endl;
+            return;
+        }
         for (int i = 0; i < number_of_students; i++) {
             if (student_ids[i] == id) {
                 grades[i] = grade;
@@ -157,7 +173,7 @@ public:
         instructors_ids = new_instructors_ids;  // Assign new array
     }
 
-    double get_Average_Grade()
+    double get_average_grade()
     {
         if (number_of_students == 0) return 0.0 ;
         int sum = 0 ;
@@ -220,7 +236,7 @@ public:
         cout<< "Course Report : " << get_name() << endl ;
         cout << "------------------------------" <<endl ;
         cout<<"Total Students    : "<< get_number_of_students() << endl ;
-        cout<<"Average Grade     : " << get_Average_Grade() <<endl;
+        cout<<"Average Grade     : " << get_average_grade() <<endl;
         cout <<"Highest Grade    : "<< get_highest_grade() << endl ;
         cout<< "Lowest Grade     : "<< get_lowest_grade() << endl ;
         cout<< "Passing Students : "<< get_passing_students() << endl ;

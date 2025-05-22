@@ -62,8 +62,14 @@ public:
 
     // Function to remove a course
     void remove_course(Course& course) {
+        if (&course == nullptr) {
+            return;  // Handle null case safely
+        }
+        
+        bool found = false;
         for (int i = 0; i < course_count; i++) {
             if (courses[i].get_code() == course.get_code()) {
+                found = true;
                 Course* new_courses = new Course[course_count - 1];  // Step 1: Allocate smaller array
 
                 for (int j = 0; j < i; j++)                          // Step 2: Copy elements before `i`
@@ -75,10 +81,11 @@ public:
                 courses = new_courses;                               // Step 4: Update pointer
                 course_count--;                                      // Step 5: Update count
 
-                cout << " removed from list of courses successfully." << endl;
+                cout << "Course removed from instructor's list." << endl;
                 break;
             }
         }
+        // No need to print error if not found - could be automatic removal
     }
 
     // Function to set or change a grade of a student

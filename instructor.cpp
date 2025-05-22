@@ -100,8 +100,8 @@ double Instructor::avg_grade(Course& course) {
     return total / course.get_number_of_students();
 }
 
-void Instructor::save() {
-    ofstream file("instructors.txt", ios::app);
+void Instructor::save(const string& filePath) {
+    ofstream file(filePath, ios::app);
 
     if (!file.is_open()) {
         cout << "Failed to open file" << endl;

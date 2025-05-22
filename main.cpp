@@ -50,6 +50,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
 
                 Course* course_to_add = find_course_by_code(course_list, course_count, course_code);
                 if (course_to_add) {
+                    cout << "Your student ID is: " << student.get_id() << endl;
                     student.add(*course_to_add);
                 } else {
                     cout << "Course not found.\n";
@@ -98,7 +99,6 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
             case 0:
                 cout << "Logging out...\n";
                 return;
-                break;
             default:
                 cout << "Invalid choice. Please try again.\n";
                 break;
@@ -117,6 +117,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
         cout << "5. View min grade in a course\n";
         cout << "6. View average grade in a course\n";
         cout << "7. View list of courses taught\n";
+        cout << "8. View performance report\n";
         cout << "0. Log out\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -154,6 +155,29 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "Enter course code: ";
                 cin >> course_code;
                 Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (!course) {
+                    cout << "Course not found.\n";
+                    break;
+                }
+                
+                // Display registered students in this course
+                if (course->get_number_of_students() == 0) {
+                    cout << "No students are registered for this course.\n";
+                    break;
+                }
+                
+                cout << "\nStudents registered in this course:\n";
+                for (int i = 0; i < course->get_number_of_students(); i++) {
+                    int stu_id = course->get_student_ids()[i];
+                    Student* stu = find_student_by_id(student_list, student_count, stu_id);
+                    if (stu) {
+                        cout << "ID: " << stu_id << ", Username: " << stu->get_username() << endl;
+                    } else {
+                        cout << "ID: " << stu_id << " (unknown username)" << endl;
+                    }
+                }
+                cout << endl;
+                
                 cout << "Enter student ID: ";
                 cin >> student_id;
                 int flag=0;
@@ -164,23 +188,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                     }
                 }
                 if (flag == 0) {
-                    cout << "This student isn't registered for this course ";
-                    return;
+                    cout << "This student isn't registered for this course.\n";
+                    break;
                 }
                 cout << "Enter new grade: ";
                 cin >> grade;
+                
+                // Validate grade
+                if (grade < 0 || grade > 100) {
+                    cout << "Invalid grade. Please enter a value between 0 and 100.\n";
+                    break;
+                }
 
-
-                if (course) {
-                    Student* student = find_student_by_id(student_list, student_count, student_id);
-                    if (student) {
-                        instructor.set_grade(*course, *student, grade);
-                        cout << "Grade updated successfully.\n";
-                    } else {
-                        cout << "Student not found.\n";
-                    }
+                Student* student = find_student_by_id(student_list, student_count, student_id);
+                if (student) {
+                    instructor.set_grade(*course, *student, grade);
+                    cout << "Grade updated successfully.\n";
                 } else {
-                    cout << "Course not found.\n";
+                    cout << "Student not found.\n";
                 }
                 break;
             }
@@ -236,6 +261,10 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 }
                 break;
             }
+            case 8: {
+                instructor.performance_I();
+                break;
+            }
             case 0:
                 cout << "Logging out...\n";
                 return;
@@ -247,9 +276,9 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
     }
 }
 
-void show_administrator_main_menu(Administrator &admin,Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count) {
+void show_administrator_main_menu(Administrator &admin, Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count) {
         int choice = 0;
-        while (choice != 7) {
+        while (choice != 8) {
             cout << "\n=== Administrator Menu ===\n";
             cout << "1. Add a new user (student/instructor)\n";
             cout << "2. Remove a user\n";
@@ -257,6 +286,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
             cout << "4. Remove a course\n";
             cout << "5. View all students\n";
             cout << "6. View all instructors\n";
+            cout << "7. View all courses\n";
             cout << "0. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
@@ -337,7 +367,7 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     cout << "\n=== Remove Course ===\n";
                     cout << "Enter course code to remove: ";
                     cin >> code;
-                    admin.remove_course(code);
+                    admin.remove_course(code, student_list, student_count, instructor_list, instructor_count);
                     break;
                 }
                 case 5:
@@ -345,6 +375,9 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     break;
                 case 6:
                     admin.view_instructors(instructor_list, instructor_count);
+                    break;
+                case 7:
+                    admin.view_courses();
                     break;
                 case 0:
                     cout << "Exiting administrator menu.\n";
@@ -379,9 +412,8 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
         for (int i = 0; i < course_count; ++i) {
             course_list[i].save();
         }
-        cout<<student_count<<endl;
+
         for (int i = 1; i <users_count; ++i) {
-            cout<<all_users[i]->get_username()<<endl;
             all_users[i]->save();
         }
 

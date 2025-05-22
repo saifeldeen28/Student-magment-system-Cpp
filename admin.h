@@ -6,6 +6,7 @@
 #include "Course.h"
 #include "student.h"
 #include "instructor.h"
+#include <fstream>
 
 using namespace std;
 
@@ -35,8 +36,8 @@ public:
         }
         
         for (int i = 0; i < student_count; i++) {
-            cout << (i+1) << ". student: " << student_list[i].get_username() 
-                 << " id=" << student_list[i].get_id() << endl;
+            cout << (i+1) << ". Student: " << student_list[i].get_username() 
+                 << " | ID: " << student_list[i].get_id() << endl;
         }
     }
     
@@ -155,22 +156,67 @@ public:
         cout << "Course added successfully" << endl;
     }
 
-    void remove_course(int code) {
+    void remove_course(int code, Student* student_list, int student_count, 
+                      Instructor* instructor_list, int instructor_count) {
         bool found = false;
+        Course* course_to_remove = nullptr;
+        int course_index = -1;
+        
+        // Find the course
         for (int i = 0; i < course_count; i++) {
             if (course_list[i].get_code() == code) {
-                // Shift remaining elements left
-                for (int j = i; j < course_count - 1; j++) {
-                    course_list[j] = course_list[j + 1];
-                }
-                course_count--;
-                cout << "Course removed successfully" << endl;
+                course_to_remove = &course_list[i];
+                course_index = i;
                 found = true;
                 break;
             }
         }
+        
         if (!found) {
             cout << "Course not found" << endl;
+            return;
+        }
+
+        // Remove course from all students that have registered for it
+        for (int i = 0; i < student_count; i++) {
+            student_list[i].drop(*course_to_remove);
+        }
+        
+        // Remove course from all instructors that teach it
+        for (int i = 0; i < instructor_count; i++) {
+            instructor_list[i].remove_course(*course_to_remove);
+        }
+        
+        // Remove the course from the course list
+        for (int j = course_index; j < course_count - 1; j++) {
+            course_list[j] = course_list[j + 1];
+        }
+        course_count--;
+        
+        cout << "Course removed successfully" << endl;
+        
+        // Update files
+        // First truncate the files
+        ofstream courseFile("courses.txt", ios::trunc);
+        courseFile.close();
+        
+        // Then save current data
+        for (int i = 0; i < course_count; i++) {
+            course_list[i].save();
+        }
+        
+        ofstream studentFile("students.txt", ios::trunc);
+        studentFile.close();
+        
+        for (int i = 0; i < student_count; i++) {
+            student_list[i].save();
+        }
+        
+        ofstream instructorFile("instructors.txt", ios::trunc);
+        instructorFile.close();
+        
+        for (int i = 0; i < instructor_count; i++) {
+            instructor_list[i].save();
         }
     }
 
@@ -199,7 +245,7 @@ public:
         bool found = false;
 
         for (int i = 0; i < students_count; i++) {
-            GPA = s[i].calculate_GPA();
+            GPA = s[i].calculate_gpa();
 
             switch (range) {
                 case 1: {
@@ -243,6 +289,22 @@ public:
     }
     void save() override {
         cout << "your not supposed to be here" << endl;
+    }
+
+    void view_courses() const {
+        cout << "\n=== Course List ===\n";
+        if (course_count == 0) {
+            cout << "No courses available.\n";
+            return;
+        }
+        
+        for (int i = 0; i < course_count; i++) {
+            cout << (i+1) << ". Course: " << course_list[i].get_name() 
+                 << " | Code: " << course_list[i].get_code()
+                 << " | Credits: " << course_list[i].get_credits() 
+                 << " | Students: " << course_list[i].get_number_of_students() << endl;
+        }
+        cout << endl;
     }
 };
 

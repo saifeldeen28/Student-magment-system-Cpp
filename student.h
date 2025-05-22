@@ -1,6 +1,7 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 #include <iostream>
+#include <fstream>
 #include "Course.h"
 #include "User.h"
 using namespace std;
@@ -34,22 +35,28 @@ public:
         }
 
         if (!course.add_student(get_id(), grade)) {
-            cout << " Couldnt add student to the course " << endl ;
+            cout << " Couldn't add student to the course " << endl ;
             return false;
         }
 
         registered_courses[course_count] = &course ; 
         course_count++;
-        cout << "Successfully registered for " << course.get_name() << endl ;
+        cout << "Successfully registered for " << course.get_name() 
+             << " with student ID: " << get_id() << endl ;
         return true;
     }
 
     bool drop(Course& course) {
+        if (&course == nullptr) {
+            return false;  // Handle null case safely
+        }
+        
         bool found = false ;
         for (int i = 0; i < course_count; i++) {
-            if (registered_courses[i]->get_code() == course.get_code()) {
+            if (registered_courses[i] != nullptr && 
+                registered_courses[i]->get_code() == course.get_code()) {
                 found = true ;
-                course.drop_student(get_id())  ;
+                course.drop_student(get_id());
 
                 for (int j = i; j < course_count - 1; j++) {
                     registered_courses[j] = registered_courses[j + 1]; // Shift courses left
@@ -63,8 +70,8 @@ public:
             }
         }
         if (!found) {
-            cout << "Course not found in registered list." << endl;
-            return false ;
+            // No need to print an error if called by the system during course removal
+            return false;
         }
 
         return true;
@@ -95,7 +102,7 @@ public:
         cout << "Average Grade: " << sum / course_count << endl;
     }
 
-    double calculate_GPA() {
+    double calculate_gpa() {
         if (course_count == 0) {
             cout << "No registered courses. GPA is 0.0" << endl;
             return 0.0;
@@ -126,12 +133,12 @@ public:
             total_credits += credits;
         }
 
-        double GPA = (total_credits > 0) ? total_gpa_points / total_credits : 0.0;
-        return GPA;
+        double gpa = (total_credits > 0) ? total_gpa_points / total_credits : 0.0;
+        return gpa;
     }
 
-    int get_Number_Of_Courses() {
-        return course_count ;
+    int get_number_of_courses() {
+        return course_count;
     }
 void save() override
 {
@@ -176,7 +183,7 @@ void save() override
             }
         }
 
-        cout << endl << "GPA: " << calculate_GPA() << endl ;
+        cout << endl << "GPA: " << calculate_gpa() << endl ;
         cout << " ======================================== " << endl ;
     }
 };
