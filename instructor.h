@@ -121,7 +121,7 @@ public:
     }
 
     // Function to save the instructor data to a file
-    void save() {
+    void save() override{
         ofstream file("instructors.txt", ios::app);
 
         if (!file.is_open()) {
@@ -136,7 +136,6 @@ public:
         }
 
         file.close();
-        cout << "Instructor data saved successfully.";
     }
     
     // Function to display instructor performance report

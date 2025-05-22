@@ -124,11 +124,11 @@ public:
         }
         return false;
     }
-    bool save_courses(string filename)
+    bool save()
     {
-        ofstream file(filename, ios::trunc) ;  // Append mode
+        ofstream file("courses.txt", ios::app) ;  // Append mode
         if (!file.is_open()) {
-            cout << "The file os opened " << filename << endl;
+            cout << "The file os opened " << "courses.txt "<< endl;
             return false ;
         }
 

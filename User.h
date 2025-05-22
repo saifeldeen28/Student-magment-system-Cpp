@@ -32,6 +32,9 @@ public:
     string get_username() const { return username; }
     string get_password() const { return password; }
     string get_user_type() const { return user_type; }
+    virtual void save() {
+        cout << "wrong usage of polymorphism";
+    }
 
 
 };

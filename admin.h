@@ -23,6 +23,10 @@ public:
         }
     }
 
+    void set_course_count(int count) {
+        course_count = count;
+    }
+
     void view_students(const Student* student_list, int student_count) {
         cout << "\n=== Student List ===\n";
         if (student_count == 0) {
@@ -65,7 +69,7 @@ public:
         cout << "Student added successfully" << endl;
     }
 	void set_course_list(Course* list) {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < course_count; i++) {
             course_list[i] = list[i]; // Copy each element individually
         }
 	}
@@ -236,6 +240,9 @@ public:
         if (!found) {
             cout << "No students found in this GPA range." << endl;
         }
+    }
+    void save() override {
+        cout << "your not supposed to be here" << endl;
     }
 };
 

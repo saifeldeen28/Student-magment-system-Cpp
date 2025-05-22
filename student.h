@@ -133,12 +133,12 @@ public:
     int get_Number_Of_Courses() {
         return course_count ;
     }
-bool save_students(string filename)
+void save() override
 {
-    ofstream file(filename, ios::app) ;  // Append mode
+    ofstream file("students.txt", ios::app) ;  // Append mode
     if (!file.is_open()) {
-        cout << "The file os opened " << filename << endl;
-        return false ;
+        cout << "The file os opened " << "students.txt" << endl;
+        return ;
     }
 
     file << get_id() << " " << get_username() << " "<<get_password() << " " << course_count ;
@@ -151,7 +151,7 @@ bool save_students(string filename)
     file << endl;
     file.close();
 
-    return true;
+    return;
 }
 
     void Card() {

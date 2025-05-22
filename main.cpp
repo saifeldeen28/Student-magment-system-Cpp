@@ -129,6 +129,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
                 if (course) {
+                    course->add_instructor(instructor.get_id());
                     instructor.add_course(*course);
                 } else {
                     cout << "Course not found.\n";
@@ -325,15 +326,8 @@ void show_administrator_main_menu(Administrator &admin,Student* student_list, in
                     cout << "Enter credits: ";
                     cin >> credits;
 
-                    cout << "Enter number of instructors (0-3): ";
-                    cin >> num_instructors;
-                    if (num_instructors > 3) num_instructors = 3; // Maximum 3 instructors per course
 
                     int* instructor_ids = new int[num_instructors];
-                    for (int i = 0; i < num_instructors; i++) {
-                        cout << "Enter instructor ID " << (i+1) << ": ";
-                        cin >> instructor_ids[i];
-                    }
 
                     admin.add_course(name, code, credits, instructor_ids, num_instructors, instructor_list, instructor_count);
                     break;
@@ -383,14 +377,14 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
         ofstream file2("instructors.txt", ios::trunc);
 
         for (int i = 0; i < course_count; ++i) {
-            course_list[i].save_courses("courses.txt");
+            course_list[i].save();
         }
-        for (int i = 0; i < student_count; ++i) {
-            student_list[i].save_students("students.txt");
+        cout<<student_count<<endl;
+        for (int i = 1; i <users_count; ++i) {
+            cout<<all_users[i]->get_username()<<endl;
+            all_users[i]->save();
         }
-        for (int i = 0; i < instructor_count; ++i) {
-            instructor_list[i].save();
-        }
+
         exit(0);
     }
 
@@ -419,6 +413,9 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
 
     if (all_users[index]->get_username() == "admin") {
         // If the username is admin, show administrator menu
+        admin.set_course_count(course_count);
+        admin.set_course_list(course_list);
+
         show_administrator_main_menu(admin, student_list, student_count, instructor_list, instructor_count);
     }
     else if (all_users[index]->get_user_type() == "student") {
@@ -543,8 +540,8 @@ int main() {
     int courses_count=extractCourseData("courses.txt",course_list,10);
     int students_count=extractStudentData("students.txt",student_list,10,course_list,courses_count);
     int instructors_count=extractInstructorData("instructors.txt",instructor_list,10,course_list,courses_count);
-    int inital_student_count=students_count;
-    int inital_instructor_count=instructors_count;
+    int initial_student_count=students_count;
+    int initial_instructor_count=instructors_count;
     Administrator administrator(1,"admin","123");
 
 
@@ -569,16 +566,21 @@ int main() {
         }
 
         all_users[0] = &administrator;
-        
-        if (inital_instructor_count+1==instructors_count) {
-            all_users[all_user_count]=&instructor_list[instructors_count-1];
-            all_user_count++;
-            inital_instructor_count++;
-        } else if (inital_student_count+1==students_count){
 
-            all_users[all_user_count]=&student_list[students_count-1];
+        // Add any new instructors
+        while (initial_instructor_count < instructors_count) {
+            all_users[all_user_count] = &instructor_list[initial_instructor_count];
             all_user_count++;
+            initial_instructor_count++;
         }
+
+        // Add any new students
+        while (initial_student_count < students_count) {
+            all_users[all_user_count] = &student_list[initial_student_count];
+            all_user_count++;
+            initial_student_count++;
+        }
+
     }
 
     return 0;
