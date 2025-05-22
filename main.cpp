@@ -393,8 +393,9 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
         }
         exit(0);
     }
+
     for (int i = 0; i < users_count; ++i) {
-        if (all_users[i]->get_username() == username||username=="admin") {
+        if (all_users[i]->get_username() == username) {
             found = true;
             index = i;
             break;
@@ -408,11 +409,6 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
 
     cout << "Password: ";
     cin >> password;
-    if (username=="admin" && password=="123") {
-        show_administrator_main_menu(admin,
-                                     student_list, student_count, instructor_list, instructor_count);
-        return;
-    }
 
     if (all_users[index]->get_password() != password ) {
         cout << "\n Incorrect password. Access denied.\n" << endl;
@@ -421,7 +417,11 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
 
     cout << "\n Welcome, " << username << "!\n" << endl;
 
-    if (all_users[index]->get_user_type() == "student") {
+    if (all_users[index]->get_username() == "admin") {
+        // If the username is admin, show administrator menu
+        show_administrator_main_menu(admin, student_list, student_count, instructor_list, instructor_count);
+    }
+    else if (all_users[index]->get_user_type() == "student") {
         show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
     }
     else if (all_users[index]->get_user_type() == "instructor") {
@@ -548,29 +548,38 @@ int main() {
     Administrator administrator(1,"admin","123");
 
 
-    User* all_users [100] ;
+    User* all_users [100];
+    all_users[0] = &administrator;
+
     for (int i = 0; i < students_count; i++) {
-        all_users[i]=&student_list[i];
+        all_users[i+1] = &student_list[i];
     }
     for (int i = 0; i < instructors_count; i++) {
-        all_users[i]=&instructor_list[i];
+        all_users[i+students_count+1] = &instructor_list[i];
     }
-    int all_user_count =students_count+instructors_count;
+
+    int all_user_count = 1 + students_count + instructors_count;
 
     while (true) {
         sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count);
+
         courses_count=administrator.get_course_count();
         for (int i = 0; i < courses_count; ++i) {
             course_list[i]=administrator.get_course_list()[i];
         }
+
+        all_users[0] = &administrator;
+        
         if (inital_instructor_count+1==instructors_count) {
             all_users[all_user_count]=&instructor_list[instructors_count-1];
             all_user_count++;
             inital_instructor_count++;
         } else if (inital_student_count+1==students_count){
+
             all_users[all_user_count]=&student_list[students_count-1];
             all_user_count++;
         }
     }
+
     return 0;
 }
