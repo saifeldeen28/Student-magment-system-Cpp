@@ -245,41 +245,6 @@ public:
 
 
     }
-
-
-
-    // Copy assignment operator
-    /*Course& operator=(const Course& other) {
-        // Self-assignment check
-        if (this == &other) {
-            return *this;
-        }
-
-        // Copy primitive types
-        name = other.name;
-        code = other.code;
-        credits = other.credits;
-        number_of_students = other.number_of_students;
-        number_of_instructors = other.number_of_instructors;
-
-
-
-        // Allocate new memory and deep copy arrays
-        instructors_ids = new int[number_of_instructors];
-        for (int i = 0; i < number_of_instructors; i++) {
-            instructors_ids[i] = other.instructors_ids[i];
-        }
-
-        student_ids = new int[number_of_students];
-        grades = new int[number_of_students];
-        for (int i = 0; i < number_of_students; i++) {
-            student_ids[i] = other.student_ids[i];
-            grades[i] = other.grades[i];
-        }
-
-        // Return reference to current object
-        return *this;
-    }*/
 };
 
 #endif //COURSE_H

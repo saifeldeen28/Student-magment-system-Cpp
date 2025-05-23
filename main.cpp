@@ -9,6 +9,157 @@
 #include "student.h"
 using namespace std;
 
+// Function prototypes
+Course* find_course_by_code(Course* course_list, int course_count, int code);
+Student* find_student_by_id(Student* student_list, int student_count, int id);
+void show_student_main_menu(Student &student, Course* course_list, int &course_count);
+void show_instructor_main_menu(Instructor &instructor, Course* course_list, int &course_count, Student* student_list, int &student_count);
+void show_administrator_main_menu(Administrator &admin, Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count);
+void sign_in(User** all_users, Administrator& admin, int& users_count, Student* student_list, int& student_count, Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count);
+int extractCourseData(const string& filePath, Course courses[], int maxCourses);
+int extractStudentData(const string& filePath, Student students[], int maxStudents, Course courses[], int courses_count);
+int extractInstructorData(const string& filePath, Instructor instructors[], int maxInstructors, Course courses[], int courses_count);
+
+int main() {
+    Course course_list[10];
+    Student student_list[10];
+    Instructor instructor_list[10];
+    int courses_count=extractCourseData("courses.txt",course_list,10);
+    int students_count=extractStudentData("students.txt",student_list,10,course_list,courses_count);
+    int instructors_count=extractInstructorData("instructors.txt",instructor_list,10,course_list,courses_count);
+    int initial_student_count=students_count;
+    int initial_instructor_count=instructors_count;
+    Administrator administrator(1,"admin","123");
+
+
+    User* all_users [100];
+    all_users[0] = &administrator;
+
+    for (int i = 0; i < students_count; i++) {
+        all_users[i+1] = &student_list[i];
+    }
+    for (int i = 0; i < instructors_count; i++) {
+        all_users[i+students_count+1] = &instructor_list[i];
+    }
+
+    int all_user_count = 1 + students_count + instructors_count;
+
+    while (true) {
+        sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count);
+
+        courses_count=administrator.get_course_count();
+        for (int i = 0; i < courses_count; ++i) {
+            course_list[i]=administrator.get_course_list()[i];
+        }
+
+        all_users[0] = &administrator;
+
+        // Add any new instructors
+        while (initial_instructor_count < instructors_count) {
+            all_users[all_user_count] = &instructor_list[initial_instructor_count];
+            all_user_count++;
+            initial_instructor_count++;
+        }
+
+        // Add any new students
+        while (initial_student_count < students_count) {
+            all_users[all_user_count] = &student_list[initial_student_count];
+            all_user_count++;
+            initial_student_count++;
+        }
+
+    }
+
+    return 0;
+}
+
+void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
+             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
+
+    cout << "\n==========================" << endl;
+    cout << "         SIGN IN           " << endl;
+    cout << "==========================" << endl;
+
+    string username, password;
+    bool found = false;
+    int index = -1;
+
+    cout << "Username: ";
+    cin >> username;
+
+    if (username=="save") {
+        char choice;
+        cout << "\n=== Save Options ===\n";
+        cout << "1. Save and exit\n";
+        cout << "2. Continue without saving\n";
+        cout << "Enter your choice (1-2): ";
+        cin >> choice;
+
+        if (choice == '1') {
+            cout << "Saving all data and exiting...\n";
+            ofstream file("students.txt", ios::trunc);
+            ofstream file1("courses.txt", ios::trunc);
+            ofstream file2("instructors.txt", ios::trunc);
+
+            for (int i = 0; i < course_count; ++i) {
+                course_list[i].save();
+            }
+
+            for (int i = 1; i < users_count; ++i) {
+                all_users[i]->save();
+            }
+
+            exit(0);
+        } else if (choice == '2') {
+            cout << "Continuing without saving...\n";
+            return;
+        } else {
+            cout << "Invalid choice. Returning to sign-in.\n";
+            return;
+        }
+    }
+
+    for (int i = 0; i < users_count; ++i) {
+        if (all_users[i]->get_username() == username) {
+            found = true;
+            index = i;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "\n Username '" << username << "' not found.\n" << endl;
+        return;
+    }
+
+    cout << "Password: ";
+    cin >> password;
+
+    if (all_users[index]->get_password() != password ) {
+        cout << "\n Incorrect password. Access denied.\n" << endl;
+        return;
+    }
+
+    cout << "\n Welcome, " << username << "!\n" << endl;
+
+    if (all_users[index]->get_username() == "admin") {
+        // If the username is admin, show administrator menu
+        admin.set_course_count(course_count);
+        admin.set_course_list(course_list);
+
+        show_administrator_main_menu(admin, student_list, student_count, instructor_list, instructor_count, course_list, course_count);
+    }
+    else if (all_users[index]->get_user_type() == "student") {
+        show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
+    }
+    else if (all_users[index]->get_user_type() == "instructor") {
+        show_instructor_main_menu(static_cast<Instructor&>(*all_users[index]),
+                                  course_list, course_count, student_list, student_count);
+    }
+
+    cout << "\n==========================\n" << endl;
+}
+
 // Helper function to find a course by code
 Course* find_course_by_code(Course* course_list, int course_count, int code) {
     for (int i = 0; i < course_count; i++) {
@@ -103,17 +254,17 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 cout << "2. Continue\n";
                 cout << "Enter your choice (1-2): ";
                 cin >> save_choice;
-                
+
                 if (save_choice == '1') {
                     cout << "Saving all data and logging out...\n";
                     ofstream file("students.txt", ios::trunc);
                     ofstream file1("courses.txt", ios::trunc);
                     ofstream file2("instructors.txt", ios::trunc);
-                    
+
                     for (int i = 0; i < course_count; ++i) {
                         course_list[i].save();
                     }
-                    
+
                     student.save();
                 }
                 cout << "Logging out...\n";
@@ -179,13 +330,13 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                     cout << "Course not found.\n";
                     break;
                 }
-                
+
                 // Display registered students in this course
                 if (course->get_number_of_students() == 0) {
                     cout << "No students are registered for this course.\n";
                     break;
                 }
-                
+
                 cout << "\nStudents registered in this course:\n";
                 for (int i = 0; i < course->get_number_of_students(); i++) {
                     int stu_id = course->get_student_ids()[i];
@@ -197,7 +348,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                     }
                 }
                 cout << endl;
-                
+
                 cout << "Enter student ID: ";
                 cin >> student_id;
                 int flag=0;
@@ -213,7 +364,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 }
                 cout << "Enter new grade: ";
                 cin >> grade;
-                
+
                 // Validate grade
                 if (grade < 0 || grade > 100) {
                     cout << "Invalid grade. Please enter a value between 0 and 100.\n";
@@ -292,17 +443,17 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "2. Continue\n";
                 cout << "Enter your choice (1-2): ";
                 cin >> save_choice;
-                
+
                 if (save_choice == '1') {
                     cout << "Saving all data and logging out...\n";
                     ofstream file("students.txt", ios::trunc);
                     ofstream file1("courses.txt", ios::trunc);
                     ofstream file2("instructors.txt", ios::trunc);
-                    
+
                     for (int i = 0; i < course_count; ++i) {
                         course_list[i].save();
                     }
-                    
+
                     instructor.save();
                 }
                 cout << "Logging out...\n";
@@ -429,21 +580,21 @@ void show_administrator_main_menu(Administrator &admin, Student* student_list, i
                     cout << "2. Continue\n";
                     cout << "Enter your choice (1-2): ";
                     cin >> save_choice;
-                    
+
                     if (save_choice == '1') {
                         cout << "Saving all data and exiting...\n";
                         ofstream file("students.txt", ios::trunc);
                         ofstream file1("courses.txt", ios::trunc);
                         ofstream file2("instructors.txt", ios::trunc);
-                        
+
                         for (int i = 0; i < course_count; ++i) {
                             course_list[i].save();
                         }
-                        
+
                         for (int i = 0; i < student_count; ++i) {
                             student_list[i].save();
                         }
-                        
+
                         for (int i = 0; i < instructor_count; ++i) {
                             instructor_list[i].save();
                         }
@@ -459,92 +610,7 @@ void show_administrator_main_menu(Administrator &admin, Student* student_list, i
     }
 
 
-void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
-             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
 
-    cout << "\n==========================" << endl;
-    cout << "         SIGN IN           " << endl;
-    cout << "==========================" << endl;
-
-    string username, password;
-    bool found = false;
-    int index = -1;
-
-    cout << "Username: ";
-    cin >> username;
-
-    if (username=="save") {
-        char choice;
-        cout << "\n=== Save Options ===\n";
-        cout << "1. Save and exit\n";
-        cout << "2. Continue without saving\n";
-        cout << "Enter your choice (1-2): ";
-        cin >> choice;
-        
-        if (choice == '1') {
-            cout << "Saving all data and exiting...\n";
-            ofstream file("students.txt", ios::trunc);
-            ofstream file1("courses.txt", ios::trunc);
-            ofstream file2("instructors.txt", ios::trunc);
-
-            for (int i = 0; i < course_count; ++i) {
-                course_list[i].save();
-            }
-
-            for (int i = 1; i < users_count; ++i) {
-                all_users[i]->save();
-            }
-
-            exit(0);
-        } else if (choice == '2') {
-            cout << "Continuing without saving...\n";
-            return;
-        } else {
-            cout << "Invalid choice. Returning to sign-in.\n";
-            return;
-        }
-    }
-
-    for (int i = 0; i < users_count; ++i) {
-        if (all_users[i]->get_username() == username) {
-            found = true;
-            index = i;
-            break;
-        }
-    }
-
-    if (!found) {
-        cout << "\n Username '" << username << "' not found.\n" << endl;
-        return;
-    }
-
-    cout << "Password: ";
-    cin >> password;
-
-    if (all_users[index]->get_password() != password ) {
-        cout << "\n Incorrect password. Access denied.\n" << endl;
-        return;
-    }
-
-    cout << "\n Welcome, " << username << "!\n" << endl;
-
-    if (all_users[index]->get_username() == "admin") {
-        // If the username is admin, show administrator menu
-        admin.set_course_count(course_count);
-        admin.set_course_list(course_list);
-
-        show_administrator_main_menu(admin, student_list, student_count, instructor_list, instructor_count, course_list, course_count);
-    }
-    else if (all_users[index]->get_user_type() == "student") {
-        show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
-    }
-    else if (all_users[index]->get_user_type() == "instructor") {
-        show_instructor_main_menu(static_cast<Instructor&>(*all_users[index]),
-                                  course_list, course_count, student_list, student_count);
-    }
-
-    cout << "\n==========================\n" << endl;
-}
 
 int extractCourseData(const string& filePath, Course courses[], int maxCourses) {
     ifstream file(filePath);
@@ -650,55 +716,3 @@ int extractInstructorData(const string& filePath, Instructor instructors[], int 
 
 
 
-int main() {
-    Course course_list[10];
-    Student student_list[10];
-    Instructor instructor_list[10];
-    int courses_count=extractCourseData("courses.txt",course_list,10);
-    int students_count=extractStudentData("students.txt",student_list,10,course_list,courses_count);
-    int instructors_count=extractInstructorData("instructors.txt",instructor_list,10,course_list,courses_count);
-    int initial_student_count=students_count;
-    int initial_instructor_count=instructors_count;
-    Administrator administrator(1,"admin","123");
-
-
-    User* all_users [100];
-    all_users[0] = &administrator;
-
-    for (int i = 0; i < students_count; i++) {
-        all_users[i+1] = &student_list[i];
-    }
-    for (int i = 0; i < instructors_count; i++) {
-        all_users[i+students_count+1] = &instructor_list[i];
-    }
-
-    int all_user_count = 1 + students_count + instructors_count;
-
-    while (true) {
-        sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count);
-
-        courses_count=administrator.get_course_count();
-        for (int i = 0; i < courses_count; ++i) {
-            course_list[i]=administrator.get_course_list()[i];
-        }
-
-        all_users[0] = &administrator;
-
-        // Add any new instructors
-        while (initial_instructor_count < instructors_count) {
-            all_users[all_user_count] = &instructor_list[initial_instructor_count];
-            all_user_count++;
-            initial_instructor_count++;
-        }
-
-        // Add any new students
-        while (initial_student_count < students_count) {
-            all_users[all_user_count] = &student_list[initial_student_count];
-            all_user_count++;
-            initial_student_count++;
-        }
-
-    }
-
-    return 0;
-}
