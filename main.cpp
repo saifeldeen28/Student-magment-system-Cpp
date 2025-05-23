@@ -326,6 +326,7 @@ void show_administrator_main_menu(Administrator &admin, Student* student_list, i
             cout << "5. View all students\n";
             cout << "6. View all instructors\n";
             cout << "7. View all courses\n";
+            cout << "8. View students by GPA\n";
             cout << "0. Exit\n";
             cout << "Enter your choice: ";
             cin >> choice;
@@ -417,6 +418,9 @@ void show_administrator_main_menu(Administrator &admin, Student* student_list, i
                     break;
                 case 7:
                     admin.view_courses();
+                    break;
+                case 8:
+                    admin.display_students_by_GPA(student_list, student_count);
                     break;
                 case 0: {
                     char save_choice;
