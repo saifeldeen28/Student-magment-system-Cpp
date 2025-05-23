@@ -76,9 +76,15 @@ int main() {
 void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
              Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
 
-    cout << "\n==========================" << endl;
-    cout << "         SIGN IN           " << endl;
-    cout << "==========================" << endl;
+    cout <<
+    "   _____ _               _____       \n"
+    "  / ____(_)             |_   _|      \n"
+    " | (___  _  __ _ _ __     | |  _ __  \n"
+    "  \\___ \\| |/ _` | '_ \\    | | | '_ \\ \n"
+    "  ____) | | (_| | | | |  _| |_| | | |\n"
+    " |_____/|_|\\__, |_| |_| |_____|_| |_|\n"
+    "            __/ |                    \n"
+    "           |___/                     \n";
 
     string username, password;
     bool found = false;
