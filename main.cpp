@@ -386,6 +386,18 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "\n+-------------------------------+\n";
                 cout << "|     ADD COURSE TO TEACHING    |\n";
                 cout << "+-------------------------------+\n";
+
+                cout << "\n+----------------------------+\n";
+                cout << "|     AVAILABLE COURSES      |\n";
+                cout << "+----------------------------+\n";
+                for (int i = 0; i < course_count; i++) {
+                    cout << (i+1) << ". Course: " << course_list[i].get_name()
+                 << " | Code: " << course_list[i].get_code()
+                 << " | Credits: " << course_list[i].get_credits()
+                 << " | Students: " << course_list[i].get_number_of_students() << endl;
+                }
+                cout << "+----------------------------+\n";
+
                 cout << "Enter course code to add: ";
                 cin >> course_code;
 
