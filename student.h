@@ -172,23 +172,21 @@ public:
     }
 void save() override
 {
-    ofstream file("students.txt", ios::app) ;  // Append mode
+    ofstream file("students.txt", ios::app);  // Append mode
     if (!file.is_open()) {
-        cout << "The file os opened " << "students.txt" << endl;
-        return ;
+        cout << "Failed to open students.txt" << endl;
+        return;
     }
 
-    file << get_id() << " " << get_username() << " "<<get_password() << " " << course_count ;
+    file << get_id() << " " << get_username() << " " << get_password() << " " << course_count;
 
     for (int i = 0; i < course_count; i++) {
         file << " " << registered_courses[i]->get_code()
-             << " " << registered_courses[i]->get_grade(get_id()) ;
+             << " " << registered_courses[i]->get_grade(get_id());
     }
 
     file << endl;
     file.close();
-
-    return;
 }
 
     void Card() {

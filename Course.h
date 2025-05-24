@@ -144,11 +144,11 @@ public:
     {
         ofstream file("courses.txt", ios::app) ;  // Append mode
         if (!file.is_open()) {
-            cout << "The file os opened " << "courses.txt "<< endl;
+            cout << "Failed to open courses.txt" << endl;
             return false ;
         }
 
-        file << code << " " << name << " "<<credits << " " << number_of_instructors ;
+        file << code << " " << name << " " << credits << " " << number_of_instructors;
 
         for (int i = 0; i < number_of_instructors; i++) {
             file << " " << instructors_ids[i];

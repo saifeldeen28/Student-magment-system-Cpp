@@ -15,10 +15,12 @@ Student* find_student_by_id(Student* student_list, int student_count, int id);
 void show_student_main_menu(Student &student, Course* course_list, int &course_count);
 void show_instructor_main_menu(Instructor &instructor, Course* course_list, int &course_count, Student* student_list, int &student_count);
 void show_administrator_main_menu(Administrator &admin, Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count);
-void sign_in(User** all_users, Administrator& admin, int& users_count, Student* student_list, int& student_count, Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count);
+void sign_in(User** all_users, Administrator& admin, int& users_count, Student* student_list, int& student_count, Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int sign_in_count);
 int extractCourseData(const string& filePath, Course courses[], int maxCourses);
 int extractStudentData(const string& filePath, Student students[], int maxStudents, Course courses[], int courses_count);
 int extractInstructorData(const string& filePath, Instructor instructors[], int maxInstructors, Course courses[], int courses_count);
+
+
 
 int main() {
     Course course_list[10];
@@ -52,12 +54,14 @@ int main() {
     cout << "|                                                      |\n";
     cout << "+------------------------------------------------------+\n\n";
 
+    int sign_in_count = 0;  // Moved outside the loop
     while (true) {
-        sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count);
-
-        courses_count=administrator.get_course_count();
+        sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count,sign_in_count);
+        sign_in_count++;  // Increment the counter
+        
+        courses_count = administrator.get_course_count();
         for (int i = 0; i < courses_count; ++i) {
-            course_list[i]=administrator.get_course_list()[i];
+            course_list[i] = administrator.get_course_list()[i];
         }
 
         all_users[0] = &administrator;
@@ -75,14 +79,51 @@ int main() {
             all_user_count++;
             initial_student_count++;
         }
-
     }
 
     return 0;
 }
 
 void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
-             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count) {
+             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int sign_in_count) {
+
+    if (sign_in_count!=0) {
+        int choice;
+        cout << "\n+-------------------+\n";
+        cout << "| SAVE OPTIONS      |\n";
+        cout << "+-------------------+\n";
+        cout << "1. Save and exit\n";
+        cout << "2. Continue \n";
+        cout << "Enter your choice (1-2): ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "Saving all data and exiting...\n";
+            // Clear files first
+            ofstream file("students.txt", ios::trunc);
+            file.close();
+            ofstream file1("courses.txt", ios::trunc);
+            file1.close();
+            ofstream file2("instructors.txt", ios::trunc);
+            file2.close();
+
+            // First save courses since they don't inherit from User
+            for (int i = 0; i < course_count; ++i) {
+                course_list[i].save();
+            }
+
+            // Then save all users using polymorphism
+            for (int i = 1; i < users_count; ++i) {// Skip admin since it doesn't need saving
+                    all_users[i]->save();
+            }
+
+            cout << "\n+--------------------------------------------------+\n";
+            cout << "|                 Session Ended                    |\n";
+            cout << "+--------------------------------------------------+\n\n";
+
+            exit(0);
+        }
+    }
 
     cout <<
     "   _____ _               _____       \n"
@@ -100,40 +141,6 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
 
     cout << "Username: ";
     cin >> username;
-
-    if (username=="save") {
-        char choice;
-        cout << "\n+-------------------+\n";
-        cout << "| SAVE OPTIONS      |\n";
-        cout << "+-------------------+\n";
-        cout << "1. Save and exit\n";
-        cout << "2. Continue without saving\n";
-        cout << "Enter your choice (1-2): ";
-        cin >> choice;
-
-        if (choice == '1') {
-            cout << "Saving all data and exiting...\n";
-            ofstream file("students.txt", ios::trunc);
-            ofstream file1("courses.txt", ios::trunc);
-            ofstream file2("instructors.txt", ios::trunc);
-
-            for (int i = 0; i < course_count; ++i) {
-                course_list[i].save();
-            }
-
-            for (int i = 1; i < users_count; ++i) {
-                all_users[i]->save();
-            }
-
-            exit(0);
-        } else if (choice == '2') {
-            cout << "Continuing without saving...\n";
-            return;
-        } else {
-            cout << "Invalid choice. Returning to sign-in.\n";
-            return;
-        }
-    }
 
     for (int i = 0; i < users_count; ++i) {
         if (all_users[i]->get_username() == username) {
@@ -180,10 +187,6 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
         show_instructor_main_menu(static_cast<Instructor&>(*all_users[index]),
                                   course_list, course_count, student_list, student_count);
     }
-
-    cout << "\n+--------------------------------------------------+\n";
-    cout << "|                 Session Ended                    |\n";
-    cout << "+--------------------------------------------------+\n\n";
 }
 
 // Helper function to find a course by code
@@ -232,9 +235,10 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 cin >> course_code;
 
                 Course* course_to_add = find_course_by_code(course_list, course_count, course_code);
-                if (course_to_add) {
+                if (course_to_add!=nullptr) {
                     cout << "Your student ID is: " << student.get_id() << endl;
                     student.add(*course_to_add);
+                    course_to_add->add_student(student.get_id());
                 } else {
                     cout << "\n+---------------------------+\n";
                     cout << "| Error: Course not found!  |\n";
@@ -302,30 +306,6 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 break;
             }
             case 0: {
-                char save_choice;
-                cout << "\n+-------------------+\n";
-                cout << "|   SAVE OPTIONS    |\n";
-                cout << "+-------------------+\n";
-                cout << "| 1. Save and exit  |\n";
-                cout << "| 2. Continue       |\n";
-                cout << "+-------------------+\n";
-                cout << "Enter your choice (1-2): ";
-                cin >> save_choice;
-
-                if (save_choice == '1') {
-                    cout << "\n+-----------------------------------+\n";
-                    cout << "| Saving all data and logging out... |\n";
-                    cout << "+-----------------------------------+\n";
-                    ofstream file("students.txt", ios::trunc);
-                    ofstream file1("courses.txt", ios::trunc);
-                    ofstream file2("instructors.txt", ios::trunc);
-
-                    for (int i = 0; i < course_count; ++i) {
-                        course_list[i].save();
-                    }
-
-                    student.save();
-                }
                 cout << "\n+-------------------+\n";
                 cout << "|   Logging out...  |\n";
                 cout << "+-------------------+\n";
@@ -405,7 +385,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "Enter course code: ";
                 cin >> course_code;
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (!course) {
+                if (course==nullptr) {
                     cout << "\n+---------------------------+\n";
                     cout << "| Error: Course not found!  |\n";
                     cout << "+---------------------------+\n";
@@ -562,30 +542,6 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 break;
             }
             case 0: {
-                char save_choice;
-                cout << "\n+-------------------+\n";
-                cout << "|   SAVE OPTIONS    |\n";
-                cout << "+-------------------+\n";
-                cout << "| 1. Save and exit  |\n";
-                cout << "| 2. Continue       |\n";
-                cout << "+-------------------+\n";
-                cout << "Enter your choice (1-2): ";
-                cin >> save_choice;
-
-                if (save_choice == '1') {
-                    cout << "\n+-----------------------------------+\n";
-                    cout << "| Saving all data and logging out... |\n";
-                    cout << "+-----------------------------------+\n";
-                    ofstream file("students.txt", ios::trunc);
-                    ofstream file1("courses.txt", ios::trunc);
-                    ofstream file2("instructors.txt", ios::trunc);
-
-                    for (int i = 0; i < course_count; ++i) {
-                        course_list[i].save();
-                    }
-
-                    instructor.save();
-                }
                 cout << "\n+-------------------+\n";
                 cout << "|   Logging out...  |\n";
                 cout << "+-------------------+\n";
@@ -731,36 +687,6 @@ void show_administrator_main_menu(Administrator &admin, Student* student_list, i
                     admin.display_students_by_GPA(student_list, student_count);
                     break;
                 case 0: {
-                    char save_choice;
-                    cout << "\n+-------------------+\n";
-                    cout << "|   SAVE OPTIONS    |\n";
-                    cout << "+-------------------+\n";
-                    cout << "| 1. Save and exit  |\n";
-                    cout << "| 2. Continue       |\n";
-                    cout << "+-------------------+\n";
-                    cout << "Enter your choice (1-2): ";
-                    cin >> save_choice;
-
-                    if (save_choice == '1') {
-                        cout << "\n+-----------------------------------+\n";
-                        cout << "| Saving all data and exiting...    |\n";
-                        cout << "+-----------------------------------+\n";
-                        ofstream file("students.txt", ios::trunc);
-                        ofstream file1("courses.txt", ios::trunc);
-                        ofstream file2("instructors.txt", ios::trunc);
-
-                        for (int i = 0; i < course_count; ++i) {
-                            course_list[i].save();
-                        }
-
-                        for (int i = 0; i < student_count; ++i) {
-                            student_list[i].save();
-                        }
-
-                        for (int i = 0; i < instructor_count; ++i) {
-                            instructor_list[i].save();
-                        }
-                    }
                     cout << "\n+-----------------------------------+\n";
                     cout << "| Exiting administrator menu.       |\n";
                     cout << "+-----------------------------------+\n";

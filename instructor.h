@@ -128,11 +128,11 @@ public:
     }
 
     // Function to save the instructor data to a file
-    void save() override{
+    void save() override {
         ofstream file("instructors.txt", ios::app);
 
         if (!file.is_open()) {
-            cout << "Failed to open file" << endl;
+            cout << "Failed to open instructors.txt" << endl;
             return;
         }
 
@@ -142,6 +142,7 @@ public:
             file << courses[i].get_code() << " ";
         }
 
+        file << endl;
         file.close();
     }
     
