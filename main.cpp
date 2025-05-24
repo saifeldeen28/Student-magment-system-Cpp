@@ -250,6 +250,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                  << " | Students: " << course_list[i].get_number_of_students() << endl;
                 }
                 cout << "+----------------------------+\n";
+
                 cout << "Enter course code to register: ";
                 cin >> course_code;
 
@@ -404,6 +405,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "\n+--------------------------------+\n";
                 cout << "|     REMOVE COURSE FROM LIST    |\n";
                 cout << "+--------------------------------+\n";
+
+                cout << "\n+---------------------------------+\n";
+                cout << "|   COURSES YOU ARE TEACHING      |\n";
+                cout << "+---------------------------------+\n";
+
+                Course* courses = instructor.get_courses();
+                int count = instructor.get_courses_count();
+                for (unsigned i = instructor.get_username().length(); i < 12; i++) cout << " ";
+                if (count == 0) {
+                    cout << "| No courses currently taught    |\n";
+                    cout << "+-------------------------------+\n";
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        cout << "| " << (i + 1) << ". " << courses[i].get_name()
+                             << " (Code: " << courses[i].get_code() << ")" << endl;
+                    }
+                    cout << "+-------------------------------+\n";
+                }
                 cout << "Enter course code to remove: ";
                 cin >> course_code;
 
@@ -505,6 +524,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "\n+-------------------------------+\n";
                 cout << "|     VIEW MAXIMUM GRADE        |\n";
                 cout << "+-------------------------------+\n";
+
+                cout << "\n+---------------------------------+\n";
+                cout << "|   COURSES YOU ARE TEACHING      |\n";
+                cout << "+---------------------------------+\n";
+
+                Course* courses = instructor.get_courses();
+                int count = instructor.get_courses_count();
+                for (unsigned i = instructor.get_username().length(); i < 12; i++) cout << " ";
+                if (count == 0) {
+                    cout << "| No courses currently taught    |\n";
+                    cout << "+-------------------------------+\n";
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        cout << "| " << (i + 1) << ". " << courses[i].get_name()
+                             << " (Code: " << courses[i].get_code() << ")" << endl;
+                    }
+                    cout << "+-------------------------------+\n";
+                }
                 cout << "Enter course code: ";
                 cin >> course_code;
 
@@ -526,6 +563,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "\n+-------------------------------+\n";
                 cout << "|     VIEW MINIMUM GRADE        |\n";
                 cout << "+-------------------------------+\n";
+
+                cout << "\n+---------------------------------+\n";
+                cout << "|   COURSES YOU ARE TEACHING      |\n";
+                cout << "+---------------------------------+\n";
+
+                Course* courses = instructor.get_courses();
+                int count = instructor.get_courses_count();
+                for (unsigned i = instructor.get_username().length(); i < 12; i++) cout << " ";
+                if (count == 0) {
+                    cout << "| No courses currently taught    |\n";
+                    cout << "+-------------------------------+\n";
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        cout << "| " << (i + 1) << ". " << courses[i].get_name()
+                             << " (Code: " << courses[i].get_code() << ")" << endl;
+                    }
+                    cout << "+-------------------------------+\n";
+                }
                 cout << "Enter course code: ";
                 cin >> course_code;
 
@@ -547,6 +602,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "\n+-------------------------------+\n";
                 cout << "|     VIEW AVERAGE GRADE        |\n";
                 cout << "+-------------------------------+\n";
+
+                cout << "\n+---------------------------------+\n";
+                cout << "|   COURSES YOU ARE TEACHING      |\n";
+                cout << "+---------------------------------+\n";
+
+                Course* courses = instructor.get_courses();
+                int count = instructor.get_courses_count();
+                for (unsigned i = instructor.get_username().length(); i < 12; i++) cout << " ";
+                if (count == 0) {
+                    cout << "| No courses currently taught    |\n";
+                    cout << "+-------------------------------+\n";
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        cout << "| " << (i + 1) << ". " << courses[i].get_name()
+                             << " (Code: " << courses[i].get_code() << ")" << endl;
+                    }
+                    cout << "+-------------------------------+\n";
+                }
                 cout << "Enter course code: ";
                 cin >> course_code;
 
