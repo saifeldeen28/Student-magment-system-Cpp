@@ -15,7 +15,7 @@ Student* find_student_by_id(Student* student_list, int student_count, int id);
 void show_student_main_menu(Student &student, Course* course_list, int &course_count);
 void show_instructor_main_menu(Instructor &instructor, Course* course_list, int &course_count, Student* student_list, int &student_count);
 void show_administrator_main_menu(Administrator &admin, Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count);
-void sign_in(User** all_users, Administrator& admin, int& users_count, Student* student_list, int& student_count, Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int sign_in_count);
+void sign_in(User** all_users, Administrator& admin, int& users_count, Student* student_list, int& student_count, Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int &sign_in_count);
 int extractCourseData(const string& filePath, Course courses[], int maxCourses);
 int extractStudentData(const string& filePath, Student students[], int maxStudents, Course courses[], int courses_count);
 int extractInstructorData(const string& filePath, Instructor instructors[], int maxInstructors, Course courses[], int courses_count);
@@ -92,7 +92,7 @@ int main() {
 }
 
 void sign_in(User** all_users,Administrator& admin, int& users_count, Student* student_list, int& student_count,
-             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int sign_in_count) {
+             Instructor* instructor_list, int& instructor_count, Course* course_list, int& course_count,int& sign_in_count) {
 
     if (sign_in_count!=0) {
         int choice;
@@ -158,6 +158,7 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     }
 
     if (!found) {
+        sign_in_count--;
         cout << "\n+-------------------------+\n";
         cout << "| Error: User not found! |\n";
         cout << "+-------------------------+\n\n";
