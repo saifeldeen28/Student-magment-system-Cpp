@@ -652,9 +652,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 Course* courses = instructor.get_courses();
                 int count = instructor.get_courses_count();
                 cout << "\n+-------------------------------+\n";
-                cout << "| COURSES TAUGHT BY " << instructor.get_username();
-                for (unsigned i = instructor.get_username().length(); i < 12; i++) cout << " ";
-                cout << "|\n";
+                cout << "| COURSES TAUGHT BY " << instructor.get_username() << " |\n";
                 cout << "+-------------------------------+\n";
 
                 if (count == 0) {
