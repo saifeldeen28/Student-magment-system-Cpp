@@ -49,8 +49,8 @@ public:
         }
         
         for (int i = 0; i < instructor_count; i++) {
-            cout << (i+1) << ". instructor: " << instructor_list[i].get_username() 
-                 << " id=" << instructor_list[i].get_id() << endl;
+            cout << (i+1) << ". Instructor: " << instructor_list[i].get_username()
+                 << " | ID: " << instructor_list[i].get_id() << endl;
         }
     }
 
