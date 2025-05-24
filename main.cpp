@@ -20,7 +20,18 @@ int extractCourseData(const string& filePath, Course courses[], int maxCourses);
 int extractStudentData(const string& filePath, Student students[], int maxStudents, Course courses[], int courses_count);
 int extractInstructorData(const string& filePath, Instructor instructors[], int maxInstructors, Course courses[], int courses_count);
 
-
+// Helper function to check if a course belongs to an instructor
+bool is_instructor_course(const Instructor& instructor, const Course& course) {
+    Course* instructor_courses = instructor.get_courses();
+    int course_count = instructor.get_courses_count();
+    
+    for (int i = 0; i < course_count; i++) {
+        if (instructor_courses[i].get_code() == course.get_code()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 int main() {
     Course course_list[10];
@@ -31,7 +42,7 @@ int main() {
     int instructors_count=extractInstructorData("instructors.txt",instructor_list,10,course_list,courses_count);
     int initial_student_count=students_count;
     int initial_instructor_count=instructors_count;
-    Administrator administrator(1,"admin","123");
+    Administrator administrator(1,"admin","123",course_list,courses_count);
 
 
     User* all_users [100];
@@ -58,11 +69,7 @@ int main() {
     while (true) {
         sign_in(all_users,administrator,all_user_count,student_list,students_count,instructor_list,instructors_count, course_list,courses_count,sign_in_count);
         sign_in_count++;  // Increment the counter
-        
-        courses_count = administrator.get_course_count();
-        for (int i = 0; i < courses_count; ++i) {
-            course_list[i] = administrator.get_course_list()[i];
-        }
+
 
         all_users[0] = &administrator;
 
@@ -174,11 +181,10 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     cout << "+--------------------------------+\n\n";
 
     if (all_users[index]->get_username() == "admin") {
-        // If the username is admin, show administrator menu
-        admin.set_course_count(course_count);
-        admin.set_course_list(course_list);
 
         show_administrator_main_menu(admin, student_list, student_count, instructor_list, instructor_count, course_list, course_count);
+        course_count=admin.get_course_count();
+        course_list=admin.get_course_list();
     }
     else if (all_users[index]->get_user_type() == "student") {
         show_student_main_menu(static_cast<Student&>(*all_users[index]), course_list, course_count);
@@ -210,8 +216,8 @@ Student* find_student_by_id(Student* student_list, int student_count, int id) {
 }
 
 void show_student_main_menu(Student &student, Course* course_list, int &course_count) {
-    int choice = 0;
-    while (choice != 6) {
+    int choice = -1;  // Initialize to -1 to enter the loop
+    while (choice != 0) {  // Only exit when user chooses 0
         cout << "\n+-------------------------------+\n";
         cout << "|        STUDENT MENU           |\n";
         cout << "+-------------------------------+\n";
@@ -220,6 +226,7 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
         cout << "| 3. View grade in a course     |\n";
         cout << "| 4. View average grade         |\n";
         cout << "| 5. View registered courses    |\n";
+        cout << "| 6. View performance report    |\n";
         cout << "| 0. Log out                    |\n";
         cout << "+-------------------------------+\n";
         cout << "Enter your choice: ";
@@ -305,6 +312,10 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 student.view_grades();
                 break;
             }
+            case 6: {
+                student.Card();  // Show student performance report
+                break;
+            }
             case 0: {
                 cout << "\n+-------------------+\n";
                 cout << "|   Logging out...  |\n";
@@ -321,8 +332,8 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
 }
 
 void show_instructor_main_menu(Instructor &instructor, Course* course_list, int &course_count, Student* student_list, int &student_count) {
-    int choice = 0;
-    while (choice != 8) {
+    int choice = -1;  // Initialize to -1 to enter the loop
+    while (choice != 0) {  // Only exit when user chooses 0
         cout << "\n+-----------------------------------+\n";
         cout << "|          INSTRUCTOR MENU          |\n";
         cout << "+-----------------------------------+\n";
@@ -333,7 +344,8 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
         cout << "| 5. View min grade in a course     |\n";
         cout << "| 6. View average grade in course   |\n";
         cout << "| 7. View list of courses taught    |\n";
-        cout << "| 8. View performance report        |\n";
+        cout << "| 8. View instructor performance    |\n";
+        cout << "| 9. View course performance        |\n";
         cout << "| 0. Log out                        |\n";
         cout << "+-----------------------------------+\n";
         cout << "Enter your choice: ";
@@ -349,7 +361,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cin >> course_code;
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course) {
+                if (course!=nullptr) {
                     course->add_instructor(instructor.get_id());
                     instructor.add_course(*course);
                 } else {
@@ -368,7 +380,7 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cin >> course_code;
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course) {
+                if (course && is_instructor_course(instructor, *course)) {
                     instructor.remove_course(*course);
                 } else {
                     cout << "\n+----------------------------------------+\n";
@@ -385,10 +397,17 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cout << "Enter course code: ";
                 cin >> course_code;
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course==nullptr) {
+                if (!course) {
                     cout << "\n+---------------------------+\n";
                     cout << "| Error: Course not found!  |\n";
                     cout << "+---------------------------+\n";
+                    break;
+                }
+
+                if (!is_instructor_course(instructor, *course)) {
+                    cout << "\n+----------------------------------------+\n";
+                    cout << "| Error: You don't teach this course!    |\n";
+                    cout << "+----------------------------------------+\n";
                     break;
                 }
 
@@ -462,15 +481,15 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cin >> course_code;
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course) {
+                if (course && is_instructor_course(instructor, *course)) {
                     double max = instructor.max_grade(*course);
                     cout << "\n+-------------------------------+\n";
-                    cout << "| Maximum grade in course: " << max << "endl";
+                    cout << "| Maximum grade in course: " << max << endl;
                     cout << "+-------------------------------+\n";
                 } else {
-                    cout << "\n+---------------------------+\n";
-                    cout << "| Error: Course not found!  |\n";
-                    cout << "+---------------------------+\n";
+                    cout << "\n+----------------------------------------+\n";
+                    cout << "| Error: Course not found or not teaching! |\n";
+                    cout << "+----------------------------------------+\n";
                 }
                 break;
             }
@@ -483,15 +502,15 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cin >> course_code;
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course) {
+                if (course && is_instructor_course(instructor, *course)) {
                     double min = instructor.min_grade(*course);
                     cout << "\n+-------------------------------+\n";
                     cout << "| Minimum grade in course: " << min << endl;
                     cout << "+-------------------------------+\n";
                 } else {
-                    cout << "\n+---------------------------+\n";
-                    cout << "| Error: Course not found!  |\n";
-                    cout << "+---------------------------+\n";
+                    cout << "\n+----------------------------------------+\n";
+                    cout << "| Error: Course not found or not teaching! |\n";
+                    cout << "+----------------------------------------+\n";
                 }
                 break;
             }
@@ -504,15 +523,15 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 cin >> course_code;
 
                 Course* course = find_course_by_code(course_list, course_count, course_code);
-                if (course) {
+                if (course && is_instructor_course(instructor, *course)) {
                     double avg = instructor.avg_grade(*course);
                     cout << "\n+-------------------------------+\n";
                     cout << "| Average grade in course: " << avg << endl;
                     cout << "+-------------------------------+\n";
                 } else {
-                    cout << "\n+---------------------------+\n";
-                    cout << "| Error: Course not found!  |\n";
-                    cout << "+---------------------------+\n";
+                    cout << "\n+----------------------------------------+\n";
+                    cout << "| Error: Course not found or not teaching! |\n";
+                    cout << "+----------------------------------------+\n";
                 }
                 break;
             }
@@ -541,6 +560,24 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                 instructor.performance_I();
                 break;
             }
+            case 9: {
+                int course_code;
+                cout << "\n+-------------------------------+\n";
+                cout << "|     VIEW COURSE PERFORMANCE   |\n";
+                cout << "+-------------------------------+\n";
+                cout << "Enter course code: ";
+                cin >> course_code;
+
+                Course* course = find_course_by_code(course_list, course_count, course_code);
+                if (course && is_instructor_course(instructor, *course)) {
+                    course->performance_C();
+                } else {
+                    cout << "\n+----------------------------------------+\n";
+                    cout << "| Error: Course not found or not teaching! |\n";
+                    cout << "+----------------------------------------+\n";
+                }
+                break;
+            }
             case 0: {
                 cout << "\n+-------------------+\n";
                 cout << "|   Logging out...  |\n";
@@ -557,6 +594,8 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
 }
 
 void show_administrator_main_menu(Administrator &admin, Student* student_list, int& student_count, Instructor* instructor_list, int &instructor_count, Course* course_list, int& course_count) {
+    admin.set_course_count(course_count);
+    admin.set_course_list(course_list);
         int choice = 0;
         while (choice != 8) {
             cout << "\n+-----------------------------------+\n";

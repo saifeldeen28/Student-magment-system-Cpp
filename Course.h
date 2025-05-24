@@ -161,6 +161,13 @@ public:
     }
 
     void add_instructor(int id) {
+        // Check if instructor already exists
+        for (int i = 0; i < number_of_instructors; i++) {
+            if (instructors_ids[i] == id) {
+                return;  // Instructor already exists, don't add again
+            }
+        }
+
         int* new_instructors_ids = new int[number_of_instructors + 1];
 
         for (int i = 0; i < number_of_instructors; i++) {
@@ -170,6 +177,7 @@ public:
         new_instructors_ids[number_of_instructors] = id;
         number_of_instructors++;
 
+        delete[] instructors_ids;  // Delete old array to prevent memory leak
         instructors_ids = new_instructors_ids;  // Assign new array
     }
 

@@ -11,21 +11,39 @@
 using namespace std;
 
 class Administrator : public User {
-    Course course_list[20];
+private:
+    Course course_list[20];  // Local copy of courses
     int course_count;
+    
+    // Helper function to sync course list
+    void sync_course_list() {
+        for (int i = 0; i < course_count; i++) {
+            course_list[i] = outer_course_list[i];
+        }
+    }
+    
+    Course* outer_course_list;  // Pointer to the external course list
 
 public:
-    Administrator(int id, string username, string password, Course l[20]=nullptr, int count = 0)
-    : User(id, username, password), course_count(count) {
-        if (l!=nullptr) {
-            for (int i = 0; i < 20; i++) {
-                course_list[i] = l[i]; // Copy each element individually
+    Administrator(int id, string username, string password, Course* external_courses = nullptr, int count = 0)
+        : User(id, username, password), course_count(count), outer_course_list(external_courses) {
+        set_user_type("admin");
+        if (external_courses != nullptr) {
+            for (int i = 0; i < count; i++) {
+                course_list[i] = external_courses[i];
             }
         }
     }
 
     void set_course_count(int count) {
         course_count = count;
+    }
+
+    void set_course_list(Course* list) {
+        outer_course_list = list;
+        for (int i = 0; i < course_count; i++) {
+            course_list[i] = list[i];
+        }
     }
 
     void view_students(const Student* student_list, int student_count) {
@@ -69,11 +87,7 @@ public:
 
         cout << "Student added successfully" << endl;
     }
-	void set_course_list(Course* list) {
-        for (int i = 0; i < course_count; i++) {
-            course_list[i] = list[i]; // Copy each element individually
-        }
-	}
+
     void add_instructor(int id, string username, string password, Instructor* instructor_list,
                        int& instructor_count) {
         // Check if instructor with same ID or username exists
@@ -129,7 +143,7 @@ public:
     }
 
     void add_course(const string &name, int code, int credits,
-    int* instructors_ids, int num_instructors,
+                   int* instructors_ids, int num_instructors,
                    Instructor* instructor_list, int instructor_count) {
         
         for (int i = 0; i < course_count; i++) {
@@ -140,7 +154,9 @@ public:
         }
 
         Course new_course(name, code, credits, instructors_ids, num_instructors);
-        course_list[course_count++] = new_course;
+        course_list[course_count] = new_course;
+        outer_course_list[course_count] = new_course;  // Update external list
+        course_count++;
         
         // Find and update the instructors who teach this course
         for (int i = 0; i < num_instructors; i++) {
@@ -187,20 +203,19 @@ public:
             instructor_list[i].remove_course(*course_to_remove);
         }
         
-        // Remove the course from the course list
+        // Remove the course from both lists
         for (int j = course_index; j < course_count - 1; j++) {
             course_list[j] = course_list[j + 1];
+            outer_course_list[j] = outer_course_list[j + 1];
         }
         course_count--;
         
         cout << "Course removed successfully" << endl;
         
         // Update files
-        // First truncate the files
         ofstream courseFile("courses.txt", ios::trunc);
         courseFile.close();
         
-        // Then save current data
         for (int i = 0; i < course_count; i++) {
             course_list[i].save();
         }
@@ -220,8 +235,8 @@ public:
         }
     }
 
-    const Course* get_course_list() const {
-        return course_list;
+    Course* get_course_list() const {
+        return outer_course_list;  // Return the external list
     }
 
     int get_course_count() const {
@@ -261,7 +276,7 @@ public:
     }
 
     void save() override {
-        cout << "your not supposed to be here" << endl;
+        // Admin doesn't need to be saved
     }
 
     void view_courses() const {
