@@ -239,6 +239,17 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 cout << "\n+----------------------------+\n";
                 cout << "|   REGISTER FOR COURSE      |\n";
                 cout << "+----------------------------+\n";
+
+                cout << "\n+----------------------------+\n";
+                cout << "|     AVAILABLE COURSES      |\n";
+                cout << "+----------------------------+\n";
+                for (int i = 0; i < course_count; i++) {
+                    cout << (i+1) << ". Course: " << course_list[i].get_name()
+                 << " | Code: " << course_list[i].get_code()
+                 << " | Credits: " << course_list[i].get_credits()
+                 << " | Students: " << course_list[i].get_number_of_students() << endl;
+                }
+                cout << "+----------------------------+\n";
                 cout << "Enter course code to register: ";
                 cin >> course_code;
 
@@ -427,9 +438,9 @@ void show_instructor_main_menu(Instructor &instructor, Course* course_list, int 
                     int stu_id = course->get_student_ids()[i];
                     Student* stu = find_student_by_id(student_list, student_count, stu_id);
                     if (stu) {
-                        cout << "| ID: " << stu_id << ", Username: " << stu->get_username() << endl;
+                        cout << "| ID: " << stu_id << ", Username: " << stu->get_username() << " |" << endl;
                     } else {
-                        cout << "| ID: " << stu_id << " (unknown username)" << endl;
+                        cout << "| ID: " << stu_id << " (unknown username)" << " |"  << endl;
                     }
                 }
                 cout << "+-------------------------------+\n";
