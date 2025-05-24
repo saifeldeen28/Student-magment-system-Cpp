@@ -79,18 +79,40 @@ public:
 
     void view_grades() {
         if (course_count == 0) {
-            cout << "You are not registered in any courses" << endl;
+            cout << "+--------------------------------------+\n";
+            cout << "| You are not registered in any courses |\n";
+            cout << "+--------------------------------------+\n";
             return;
         }
 
-        cout << "Your Grades"<<endl ;
+        cout << "+--------------------------------------+\n";
+        cout << "|            YOUR GRADES              |\n";
+        cout << "+--------------------------------------+\n";
         for (int i = 0; i < course_count; i++) {
-            cout << "Course: " << registered_courses[i]->get_name()<<endl << "Grade: " << registered_courses[i]->get_grade(get_id()) << endl;
+            string courseName = registered_courses[i]->get_name();
+            int grade = registered_courses[i]->get_grade(get_id());
+            
+            cout << "| Course: " << courseName;
+            // Add padding for course name alignment
+            int padding1 = 30 - courseName.length();
+            for (int j = 0; j < padding1; j++) cout << " ";
+            cout << "|\n";
+            
+            cout << "| Grade: " << grade;
+            // Add padding for grade alignment
+            int padding2 = 31 - to_string(grade).length();
+            for (int j = 0; j < padding2; j++) cout << " ";
+            cout << "|\n";
+            
+            cout << "+--------------------------------------+\n";
         }
     }
+    
     void average_grade() {
         if (course_count == 0) {
-            cout << "No grades available to calculate an average " << endl ;
+            cout << "+--------------------------------------+\n";
+            cout << "| No grades available for average      |\n";
+            cout << "+--------------------------------------+\n";
             return;
         }
 
@@ -98,8 +120,16 @@ public:
         for (int i = 0; i < course_count; i++) {
             sum += registered_courses[i]->get_grade(get_id());
         }
-
-        cout << "Average Grade: " << sum / course_count << endl;
+        
+        double avg = sum / course_count;
+        cout << "+--------------------------------------+\n";
+        cout << "| Average Grade: " << avg;
+        // Add padding for average alignment
+        int padding = 26 - to_string((int)avg).length();
+        if (avg - (int)avg > 0.001) padding -= 4; // Adjust for decimal places
+        for (int i = 0; i < padding; i++) cout << " ";
+        cout << "|\n";
+        cout << "+--------------------------------------+\n";
     }
 
     double calculate_gpa() {
