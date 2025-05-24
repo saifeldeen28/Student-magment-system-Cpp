@@ -158,7 +158,7 @@ void sign_in(User** all_users,Administrator& admin, int& users_count, Student* s
     }
 
     if (!found) {
-        sign_in_count--;
+        sign_in_count=0;
         cout << "\n+-------------------------+\n";
         cout << "| Error: User not found! |\n";
         cout << "+-------------------------+\n\n";
