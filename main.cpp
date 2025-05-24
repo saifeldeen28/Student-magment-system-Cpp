@@ -270,6 +270,22 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 cout << "\n+----------------------------+\n";
                 cout << "|     DROP COURSE            |\n";
                 cout << "+----------------------------+\n";
+
+                cout << "\n+--------------------------------------+\n";
+                cout << "|   COURSES YOU ARE REGISTERED IN      |\n";
+                cout << "+--------------------------------------+\n";
+
+                if (student.get_number_of_courses() == 0) {
+                    cout << "| You are not registered in any courses.\n";
+                } else {
+                    for (int i = 0; i < student.get_number_of_courses(); i++) {
+                        cout << (i+1) << ". Course: " << course_list[i].get_name()
+                 << " | Code: " << course_list[i].get_code()
+                 << " | Credits: " << course_list[i].get_credits()
+                 << " | Students: " << course_list[i].get_number_of_students() << endl;
+                    }
+                }
+                cout << "+--------------------------------------+\n";
                 cout << "Enter course code to drop: ";
                 cin >> course_code;
 
@@ -277,9 +293,9 @@ void show_student_main_menu(Student &student, Course* course_list, int &course_c
                 if (course_to_drop) {
                     student.drop(*course_to_drop);
                 } else {
-                    cout << "\n+----------------------------------------+\n";
+                    cout << "\n+------------------------------------------+\n";
                     cout << "| Error: Course not found or not registered! |\n";
-                    cout << "+----------------------------------------+\n";
+                    cout << "+------------------------------------------+\n";
                 }
                 break;
             }
